@@ -1,0 +1,50 @@
+Suiten LICENSE(MIT based)
+Version 1.0  
+Release Date: 2025-12-07  
+(This license applies to ALL source code, assets, and software
+contained in this repository unless explicitly stated otherwise.)
+
+Copyright (c) 2025 Suiten
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to use,
+copy, modify, merge, publish, and distribute the Software, subject to the
+following conditions:
+
+1. Scope of This License
+   This license applies to the entire Software, including all source code,
+   configuration files, assets, scripts, and documentation contained in this
+   repository, unless a specific file or directory explicitly states a
+   different license.
+
+2. Prohibited Uses
+   The following uses of the Software are strictly prohibited, whether
+   commercial or non-commercial:
+   - Activities involving harassment, server raids, spam attacks,
+     or any similar disruptive behavior ("荒らし関連").
+   - Any activity that directly or indirectly facilitates criminal behavior,
+     illegal acts, or violations of applicable laws or regulations.
+
+3. Commercial Use
+   Commercial use of the prohibited categories listed in Section 2 is not
+   permitted.  
+   Commercial use for lawful and non-abusive purposes is allowed.
+
+4. Attribution
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+5. Warranty Disclaimer
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+Additional Notes:
+- The author (Suiten) assumes no responsibility for any damage, loss, or
+  disputes arising from the use of this Software.
+- Future revisions of this license will increment the Version number and
+  update the Release Date.
