@@ -17,7 +17,7 @@ intents = discord.Intents.all()
 class MyBot(commands.Bot):
     def __init__(self):
         super().__init__(
-            command_prefix="MC!",
+            command_prefix="IM!",
             intents=intents,
             help_command=None
         )
