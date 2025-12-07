@@ -37,7 +37,8 @@
 作者(Suiten)は一切の責任を負いません。また、犯罪及び荒らしに関わる使用は禁止します。
 
 ## 🗒備考
+開発中のBotです。
 
-<div>
-  <p>©2025 Iroha_Music Powerd by Suiten<p>
+<div align="center">
+  <p>©2025 Pokobe_admin Powered by Suiten</p>
 </div>
