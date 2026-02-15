@@ -11,9 +11,11 @@ if TOKEN is None:
     raise ValueError("DISCORD_BOT_TOKEN が見つかりません")
 
 # Intents
-intents = discord.Intents.all()
+intents = discord.Intents.default()
+intents.message_content = True
+intents.guilds = True
+intents.messages = True 
 
-# Bot本体クラス
 class MyBot(commands.Bot):
     def __init__(self):
         super().__init__(
@@ -23,21 +25,35 @@ class MyBot(commands.Bot):
         )
 
     async def setup_hook(self):
-        # --- Cogをまとめてロード ---
-        for root, _, files in os.walk("./cogs"):
-            for filename in files:
-                if filename.endswith(".py"):
-                    rel_path = os.path.relpath(os.path.join(root, filename), ".")
-                    cog_name = rel_path.replace(os.sep, ".")[:-3]
-                    try:
-                        await self.load_extension(cog_name)
-                        print(f"✅ Cogロード成功: {cog_name}")
-                    except Exception as e:
-                        print(f"❌ Cogロード失敗: {cog_name}\n{e}")
+        failed_cogs = []
 
-        # --- スラッシュコマンド同期はここで1回だけ ---
+        # --- Cogをまとめてロード ---
+        for folder in ("./cogs",):
+            for root, _, files in os.walk(folder):
+                for filename in files:
+                    if filename.endswith(".py") and filename != "__init__.py":
+                        rel_path = os.path.relpath(os.path.join(root, filename), ".")
+                        cog_name = rel_path.replace(os.sep, ".")[:-3]
+
+                        try:
+                            await self.load_extension(cog_name)
+                        except Exception as e:
+                            failed_cogs.append((cog_name, e))
+
+        # --- ロード結果表示 ---
+        if failed_cogs:
+            print(f"✅ 以下のFile以外ロードに成功しました - {self.user}")
+            for cog_name, error in failed_cogs:
+                print(
+                    f"❌ ロード失敗 : {cog_name} - {self.user}\n"
+                    f"{error}\n"
+                )
+        else:
+            print(f"✅ すべてのFileのロードに成功しました - {self.user}")
+
+        # --- スラッシュコマンド同期 ---
         synced = await self.tree.sync()
-        print(f"✅ スラッシュコマンド登録数: {len(synced)}")
+        print(f"✅ スラッシュコマンド登録数: {len(synced)} - {self.user}")
 
     async def on_ready(self):
         print(f"✅ ログイン完了: {self.user}")
@@ -51,4 +67,4 @@ if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        print("🛑 Botを手動で停止しました。")
+        print("🛑 Botを手動で停止しました。")	

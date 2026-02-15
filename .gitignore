@@ -1,2 +1,13 @@
 .env
-*/.env
+venv
+venv/*
+data/
+data/*
+SSP/codes/
+SSP/codes/*
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+__init__.py
+.DS_Store
