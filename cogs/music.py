@@ -306,6 +306,9 @@ class Music(commands.Cog):
         elif ctx.author.voice.channel != vc.channel:
             await vc.move_to(ctx.author.voice.channel)
         await self.bot.guild_manager.ensure_guild(guild_id)
+        # コマンドを打ったテキストチャンネルを記録（NowPlaying送信先）
+        state = self.bot.guild_manager.get(guild_id)
+        state.text_channel_id = ctx.channel.id
         return vc
 
     # ─── キュー追加 & 再生エンジン ────────────────────────────────────
@@ -369,14 +372,53 @@ class Music(commands.Cog):
             self._after_track(guild_id, None)
             return
 
-        source = make_ffmpeg_source(
-            stream_url,
-            volume=state.volume,
-            bass_boost=audio_cfg.get("bass_boost", 0),
-            surround=bool(audio_cfg.get("surround", 0)),
-            reverb_level=0.0,
-            eq_bands=eq_bands if eq_bands else None,
-        )
+        try:
+            source = make_ffmpeg_source(
+                stream_url,
+                volume=state.volume,
+                bass_boost=audio_cfg.get("bass_boost", 0),
+                surround=bool(audio_cfg.get("surround", 0)),
+                reverb_level=0.0,
+                eq_bands=eq_bands if eq_bands else None,
+            )
+        except discord.ClientException as e:
+            log.error(f"[Guild {guild_id}] FFmpeg起動失敗: {e}")
+            err_channel = self.bot.get_channel(
+                (await self.bot.guild_manager.get_settings(guild_id)).get("music_channel_id")
+                or vc.channel.id
+            )
+            if err_channel and isinstance(err_channel, discord.TextChannel):
+                err_comps = [
+                    {
+                        "type": 17,
+                        "accent_color": 0xED4245,
+                        "components": [
+                            {
+                                "type": 10,
+                                "content": (
+                                    "## \u274c ffmpeg が見つかりません\n"
+                                    "音楽再生には `ffmpeg` が必要です。\n\n"
+                                    "**インストール方法:**\n"
+                                    "```\n"
+                                    "sudo apt update && sudo apt install ffmpeg\n"
+                                    "```\n"
+                                    "インストール後にBotを再起動してください。"
+                                ),
+                            }
+                        ],
+                    }
+                ]
+                try:
+                    await self.bot.http.request(
+                        discord.http.Route(
+                            "POST", "/channels/{channel_id}/messages",
+                            channel_id=err_channel.id,
+                        ),
+                        json={"flags": 1 << 15, "components": err_comps},
+                    )
+                except Exception:
+                    pass
+            return
 
         vc.play(source, after=lambda e: self._after_track(guild_id, e))
         state.is_playing = True
@@ -386,11 +428,15 @@ class Music(commands.Cog):
         await self._record_stat(guild_id, track)
 
         # Now Playing UI 送信
-        channel = self.bot.get_channel(
-            (await self.bot.guild_manager.get_settings(guild_id)).get("music_channel_id") or vc.channel.id
+        # 優先順位: DB設定チャンネル > コマンドを打ったテキストチャンネル
+        settings = await self.bot.guild_manager.get_settings(guild_id)
+        ch_id = (
+            settings.get("music_channel_id")
+            or state.text_channel_id
         )
-        if channel and isinstance(channel, discord.TextChannel):
-            settings = await self.bot.guild_manager.get_settings(guild_id)
+        channel = self.bot.get_channel(ch_id) if ch_id else None
+
+        if channel and isinstance(channel, (discord.TextChannel, discord.Thread)):
             comps = _now_playing_components(
                 track,
                 int(state.volume * 100),
@@ -403,8 +449,11 @@ class Music(commands.Cog):
                     discord.http.Route("POST", "/channels/{channel_id}/messages", channel_id=channel.id),
                     json={"flags": 1 << 15, "components": comps},
                 )
+                log.debug(f"[Guild {guild_id}] NowPlaying UI sent to #{channel.name}")
             except Exception as e:
                 log.warning(f"Failed to send NowPlaying UI: {e}")
+        else:
+            log.warning(f"[Guild {guild_id}] NowPlaying送信先チャンネルが見つかりません (ch_id={ch_id})")
 
     async def _record_stat(self, guild_id: int, track: dict) -> None:
         try:
