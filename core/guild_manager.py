@@ -32,6 +32,9 @@ class GuildState:
     quiz_active: bool = False
     auto_leave_task: asyncio.Task | None = None
 
+    # コマンドを打ったテキストチャンネルID（NowPlaying送信先）
+    text_channel_id: int | None = None
+
     # オーディオ設定
     preset: str = "flat"
     bass_boost: int = 0
