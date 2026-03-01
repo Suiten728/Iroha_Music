@@ -1,0 +1,45 @@
+2026-03-01 22:24:41 [INFO] iroha.db: Database initialized.
+2026-03-01 22:24:45 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-01 22:24:45 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-01 22:24:45 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-01 22:24:45 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-01 22:26:31 [INFO] iroha.guild_manager: Initialized settings for guild 1363116304764112966
+2026-03-01 22:31:31 [INFO] iroha.db: Database initialized.
+2026-03-01 22:31:31 [INFO] iroha.audio_engine: ffmpeg executable: ffmpeg
+2026-03-01 22:31:34 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-01 22:31:34 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-01 22:31:34 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-01 22:31:34 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-01 22:42:38 [INFO] iroha.db: Database initialized.
+2026-03-01 22:42:38 [WARNING] iroha.audio_engine: ffmpeg が自動検出できませんでした。PATH上にffmpegがあることを確認してください。
+2026-03-01 22:42:42 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-01 22:42:42 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-01 22:42:42 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-01 22:42:42 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-01 22:43:16 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=ru6i9lo4zBE: https://rr2---sn-uxjoxu-3pmr.googlevideo.com/videoplayback?expire=1772394195&ei=...
+2026-03-01 22:43:16 [DEBUG] iroha.audio_engine: FFmpeg executable: ffmpeg
+2026-03-01 22:43:16 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.80,alimiter=limit=0.99:level=1
+2026-03-01 22:45:54 [INFO] iroha.db: Database initialized.
+2026-03-01 22:45:54 [WARNING] iroha.audio_engine: ffmpeg が自動検出できませんでした。PATH上にffmpegがあることを確認してください。
+2026-03-01 22:45:58 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-01 22:45:58 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-01 22:45:58 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-01 22:45:58 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-01 22:46:40 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=ru6i9lo4zBE: https://rr2---sn-uxjoxu-3pmr.googlevideo.com/videoplayback?expire=1772394400&ei=...
+2026-03-01 22:46:40 [DEBUG] iroha.audio_engine: FFmpeg executable: ffmpeg
+2026-03-01 22:46:40 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.80,alimiter=limit=0.99:level=1
+2026-03-01 22:51:40 [INFO] iroha.db: Database initialized.
+2026-03-01 22:51:41 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-01 22:51:44 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-01 22:51:44 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-01 22:51:44 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-01 22:51:44 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-01 22:52:07 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=ru6i9lo4zBE: https://rr2---sn-uxjoxu-3pmr.googlevideo.com/videoplayback?expire=1772394727&ei=...
+2026-03-01 22:52:07 [DEBUG] iroha.audio_engine: FFmpeg executable: /usr/bin/ffmpeg
+2026-03-01 22:52:07 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.80,alimiter=limit=0.99:level=1
+2026-03-01 22:53:23 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=j7mCHcDrRF8: https://rr2---sn-uxjoxu-3pmk.googlevideo.com/videoplayback?expire=1772394803&ei=...
+2026-03-01 22:53:23 [DEBUG] iroha.audio_engine: FFmpeg executable: /usr/bin/ffmpeg
+2026-03-01 22:53:23 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.80,alimiter=limit=0.99:level=1
+2026-03-01 23:12:39 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=XMCxO2zQ0s0: https://rr3---sn-uxjoxu-3pm6.googlevideo.com/videoplayback?expire=1772395959&ei=...
+2026-03-01 23:12:39 [DEBUG] iroha.audio_engine: FFmpeg executable: /usr/bin/ffmpeg
+2026-03-01 23:12:39 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.30,alimiter=limit=0.99:level=1

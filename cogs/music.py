@@ -360,8 +360,17 @@ class Music(commands.Cog):
         import json
         eq_bands = json.loads(audio_cfg.get("eq_bands", "{}"))
 
+        # ストリームURLは期限付きのため、再生直前に webpage_url から最新を取得する
+        webpage_url = track.get("webpage_url", "")
+        stream_url = await YTDLSource.get_stream_url(webpage_url)
+        if not stream_url:
+            log.error(f"[Guild {guild_id}] ストリームURL取得失敗: {webpage_url}")
+            # 取得失敗時は次の曲へスキップ
+            self._after_track(guild_id, None)
+            return
+
         source = make_ffmpeg_source(
-            track["url"],
+            stream_url,
             volume=state.volume,
             bass_boost=audio_cfg.get("bass_boost", 0),
             surround=bool(audio_cfg.get("surround", 0)),
@@ -426,7 +435,7 @@ class Music(commands.Cog):
 
     # ─── コマンド ────────────────────────────────────────────────────
 
-    @commands.command(name="play", aliases=["p"])
+    @commands.hybrid_command(name="play", aliases=["p"])
     async def play(self, ctx: commands.Context, *, query: str) -> None:
         """URLまたは検索ワードで音楽を再生する"""
         try:
@@ -459,12 +468,12 @@ class Music(commands.Cog):
             traceback.print_exc()
             await ctx.send(f"```\n{type(e).__name__}: {e}\n```")
 
-    @commands.command(name="search", aliases=["s"])
+    @commands.hybrid_command(name="search", aliases=["s"])
     async def search(self, ctx: commands.Context, *, query: str) -> None:
         """検索して選択画面を出す"""
         await self.play(ctx, query=query)
 
-    @commands.command(name="playlist", aliases=["pl"])
+    @commands.hybrid_command(name="playlist", aliases=["pl"])
     async def playlist(self, ctx: commands.Context, url: str) -> None:
         """プレイリストURLを丸ごと追加する"""
         try:
@@ -485,14 +494,14 @@ class Music(commands.Cog):
             traceback.print_exc()
             await ctx.send(f"```\n{type(e).__name__}: {e}\n```")
 
-    @commands.command(name="queue", aliases=["q"])
+    @commands.hybrid_command(name="queue", aliases=["q"])
     async def queue(self, ctx: commands.Context) -> None:
         """キューを表示する"""
         state = self.bot.guild_manager.get(ctx.guild.id)
         comps = _queue_list_components(state.queue, 0)
         await send_v2(ctx, comps)
 
-    @commands.command(name="volume", aliases=["vol"])
+    @commands.hybrid_command(name="volume", aliases=["vol"])
     async def volume(self, ctx: commands.Context, vol: int) -> None:
         """音量を変更する (1-150)"""
         if not 1 <= vol <= 150:
@@ -504,7 +513,7 @@ class Music(commands.Cog):
             ctx.voice_client.source.volume = state.volume
         await ctx.send(f"🔊 音量を **{vol}%** に設定しました。")
 
-    @commands.command(name="skip")
+    @commands.hybrid_command(name="skip")
     async def skip(self, ctx: commands.Context) -> None:
         """曲をスキップする（投票スキップ）"""
         state = self.bot.guild_manager.get(ctx.guild.id)
@@ -522,7 +531,7 @@ class Music(commands.Cog):
         else:
             await ctx.send(f"🗳 スキップ投票: {votes}/{needed} 票")
 
-    @commands.command(name="stop")
+    @commands.hybrid_command(name="stop")
     async def stop(self, ctx: commands.Context) -> None:
         """再生を停止してキューをクリア"""
         state = self.bot.guild_manager.get(ctx.guild.id)
@@ -532,19 +541,19 @@ class Music(commands.Cog):
             ctx.voice_client.stop()
         await ctx.send("⏹ 停止しました。")
 
-    @commands.command(name="pause")
+    @commands.hybrid_command(name="pause")
     async def pause(self, ctx: commands.Context) -> None:
         if ctx.voice_client and ctx.voice_client.is_playing():
             ctx.voice_client.pause()
             await ctx.send("⏸ 一時停止しました。")
 
-    @commands.command(name="resume")
+    @commands.hybrid_command(name="resume")
     async def resume(self, ctx: commands.Context) -> None:
         if ctx.voice_client and ctx.voice_client.is_paused():
             ctx.voice_client.resume()
             await ctx.send("▶ 再開しました。")
 
-    @commands.command(name="loop")
+    @commands.hybrid_command(name="loop")
     async def loop(self, ctx: commands.Context, mode: str = "one") -> None:
         """ループモード設定: none / one / all"""
         mode = mode.lower()
@@ -556,7 +565,7 @@ class Music(commands.Cog):
         labels = {"none": "ループなし", "one": "1曲ループ", "all": "全体ループ"}
         await ctx.send(f"🔁 ループを **{labels[mode]}** に設定しました。")
 
-    @commands.command(name="shuffle")
+    @commands.hybrid_command(name="shuffle")
     async def shuffle(self, ctx: commands.Context) -> None:
         """シャッフルON/OFF"""
         state = self.bot.guild_manager.get(ctx.guild.id)
@@ -564,7 +573,7 @@ class Music(commands.Cog):
         status = "ON" if state.shuffle else "OFF"
         await ctx.send(f"🔀 シャッフルを **{status}** にしました。")
 
-    @commands.command(name="leave", aliases=["dc"])
+    @commands.hybrid_command(name="leave", aliases=["dc"])
     async def leave(self, ctx: commands.Context) -> None:
         """ボイスチャンネルから切断"""
         if ctx.voice_client:
