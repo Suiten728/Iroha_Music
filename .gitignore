@@ -3,8 +3,6 @@ venv
 venv/*
 data/
 data/*
-SSP/codes/
-SSP/codes/*
 __pycache__/
 *.pyc
 *.pyo

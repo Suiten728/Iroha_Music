@@ -1,0 +1,17 @@
+# いろは Music System — 依存パッケージ
+# pip install -r requirements.txt
+
+# Discord Bot フレームワーク（Component v2 / LayoutView 対応版）
+discord.py>=2.6.4
+
+# 音楽取得
+yt-dlp>=2024.1.0
+
+# 非同期データベース
+aiosqlite>=0.20.0
+
+# 環境変数
+python-dotenv>=1.0.0
+
+# HTTP クライアント（multipart送信用）
+aiohttp>=3.9.0
