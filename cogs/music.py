@@ -6,124 +6,112 @@ LayoutView / Component v2 を使用
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
+import random
 from typing import TYPE_CHECKING
 
 import discord
 from discord.ext import commands
 
 from utils.audio_engine import YTDLSource, make_ffmpeg_source, PRESETS
-from utils.filter_engine import scan_track, format_flag_summary, FLAG_LABELS
 
 if TYPE_CHECKING:
     from bot import IrohaBot
 
 log = logging.getLogger("iroha.music")
 
-# ─── NoCopy ミックスイン ────────────────────────────────────────────
-class NoCopy:
-    """LayoutView の deepcopy を回避するミックスイン"""
-    def __deepcopy__(self, memo):
-        return self
+
+# ════════════════════════════════════════════════════════════════
+# ヘルパー関数
+# ════════════════════════════════════════════════════════════════
+
+async def _ack(ctx: commands.Context) -> None:
+    """
+    hybrid_command がスラッシュとして呼ばれた場合、
+    Interaction を必ず defer して3秒タイムアウトを防ぐ。
+    プレフィックスコマンドの場合は何もしない。
+    """
+    if ctx.interaction and not ctx.interaction.response.is_done():
+        await ctx.interaction.response.defer()
 
 
-# ─── LayoutView 送信ヘルパー ─────────────────────────────────────────
-async def send_v2(
-    ctx_or_channel: commands.Context | discord.TextChannel | discord.Interaction,
-    components: list[dict],
-) -> None:
-    """IS_COMPONENTS_V2 フラグ付きでメッセージをHTTP直送する"""
-    if isinstance(ctx_or_channel, commands.Context):
-        channel_id = ctx_or_channel.channel.id
-        bot = ctx_or_channel.bot
-    elif isinstance(ctx_or_channel, discord.Interaction):
-        channel_id = ctx_or_channel.channel_id
-        bot = ctx_or_channel.client
-    else:
-        channel_id = ctx_or_channel.id
-        bot = ctx_or_channel._state._get_client()  # type: ignore
-
+async def _post_v2(bot, channel_id: int, components: list[dict]) -> None:
+    """IS_COMPONENTS_V2 フラグ付きでチャンネルにHTTP直送する"""
     await bot.http.request(
-        discord.http.Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id),
-        json={"flags": 1 << 15, "components": components},
-    )
-
-
-async def edit_v2(
-    interaction: discord.Interaction,
-    components: list[dict],
-) -> None:
-    """既存メッセージを IS_COMPONENTS_V2 フラグ付きで編集"""
-    await interaction.client.http.request(
         discord.http.Route(
-            "PATCH",
-            "/channels/{channel_id}/messages/{message_id}",
-            channel_id=interaction.channel_id,
-            message_id=interaction.message.id,
+            "POST", "/channels/{channel_id}/messages",
+            channel_id=channel_id,
         ),
         json={"flags": 1 << 15, "components": components},
     )
 
 
-async def send_v2_interaction(
-    interaction: discord.Interaction,
-    components: list[dict],
-    ephemeral: bool = False,
-) -> None:
-    """Interaction の response として IS_COMPONENTS_V2 を送信"""
-    flags = (1 << 15) | (1 << 6 if ephemeral else 0)
-    await interaction.response.send_message(
-        components=components,  # type: ignore — discord.py 2.6.x supports this
+async def _edit_v2(bot, channel_id: int, message_id: int, components: list[dict]) -> None:
+    """IS_COMPONENTS_V2 フラグ付きでメッセージをHTTP直接編集する"""
+    await bot.http.request(
+        discord.http.Route(
+            "PATCH",
+            "/channels/{channel_id}/messages/{message_id}",
+            channel_id=channel_id,
+            message_id=message_id,
+        ),
+        json={"flags": 1 << 15, "components": components},
     )
 
 
-# ─── Component v2 JSON ビルダー ──────────────────────────────────────
+# ════════════════════════════════════════════════════════════════
+# Component v2 JSON ビルダー
+# ════════════════════════════════════════════════════════════════
 
-def _now_playing_components(track: dict, volume: int, loop_mode: str, pos: int, total: int) -> list[dict]:
+def _now_playing_components(
+    track: dict, volume: int, loop_mode: str, queue_len: int
+) -> list[dict]:
     dur = YTDLSource.format_duration(track.get("duration", 0))
-    queue_text = f"キュー: {pos}/{total}曲"
-    loop_icon = {"none": "🔁", "one": "🔂", "all": "🔁"}[loop_mode]
-    loop_label = {"none": "ループなし", "one": "1曲ループ", "all": "全体ループ"}[loop_mode]
+    loop_label = {"none": "ループなし", "one": "1曲ループ", "all": "全体ループ"}.get(loop_mode, "")
+    loop_icon  = {"none": "🔁", "one": "🔂", "all": "🔁"}.get(loop_mode, "🔁")
 
     return [
         {
-            "type": 17,  # Container
+            "type": 17,
             "accent_color": 0x5865F2,
             "components": [
+                {"type": 10, "content": f"## 🎵 Now Playing\n**{track['title']}**"},
+                {"type": 14, "spacing": 1},
                 {
-                    "type": 10,
-                    "content": f"## 🎵 Now Playing\n**{track['title']}**",
-                },
-                {"type": 14, "spacing": 1},  # Separator small
-                {
-                    "type": 9,  # Section
-                    "components": [{"type": 10, "content": f"⏱️ {dur}　🔊 音量 {volume}%\n{loop_icon} {loop_label}　📋 {queue_text}"}],
+                    "type": 9,
+                    "components": [
+                        {"type": 10, "content": (
+                            f"⏱️ {dur}　🔊 音量 {volume}%\n"
+                            f"{loop_icon} {loop_label}　📋 キュー残り {queue_len}曲"
+                        )}
+                    ],
                     "accessory": {
                         "type": 2, "style": 5,
                         "label": "YouTube",
-                        "url": track.get("webpage_url", "https://youtube.com"),
+                        "url": track.get("webpage_url") or "https://youtube.com",
                     },
                 },
-                {"type": 14, "spacing": 2},  # Separator large
+                {"type": 14, "spacing": 2},
                 {
-                    "type": 1,  # ActionRow — ボタン
+                    "type": 1,
                     "components": [
-                        {"type": 2, "style": 4, "label": "⏭ スキップ", "custom_id": "music:skip"},
-                        {"type": 2, "style": 1, "label": "⏸ 一時停止", "custom_id": "music:pause"},
-                        {"type": 2, "style": 1, "label": "▶ 再開", "custom_id": "music:resume"},
-                        {"type": 2, "style": 2, "label": "⏹ 停止", "custom_id": "music:stop"},
+                        {"type": 2, "style": 4, "label": "⏭ スキップ",   "custom_id": "music:skip"},
+                        {"type": 2, "style": 1, "label": "⏸ 一時停止",   "custom_id": "music:pause"},
+                        {"type": 2, "style": 1, "label": "▶ 再開",       "custom_id": "music:resume"},
+                        {"type": 2, "style": 2, "label": "⏹ 停止",       "custom_id": "music:stop"},
                     ],
                 },
                 {
-                    "type": 1,  # ActionRow — セレクト（ループ）
+                    "type": 1,
                     "components": [
                         {
-                            "type": 3,  # StringSelect
+                            "type": 3,
                             "custom_id": "music:loop_select",
                             "placeholder": f"ループ設定: {loop_label}",
                             "options": [
                                 {"label": "🔁 ループなし", "value": "none"},
-                                {"label": "🔂 1曲ループ", "value": "one"},
+                                {"label": "🔂 1曲ループ",  "value": "one"},
                                 {"label": "🔁 全体ループ", "value": "all"},
                             ],
                         }
@@ -172,11 +160,12 @@ def _search_result_components(results: list[dict], query: str) -> list[dict]:
     ]
 
 
-def _queue_list_components(queue: list, page: int = 0) -> list[dict]:
-    page_size = 8
-    start = page * page_size
-    page_items = queue[start:start + page_size]
+def _queue_components(queue: list, page: int = 0) -> list[dict]:
+    page_size   = 8
     total_pages = max(1, (len(queue) + page_size - 1) // page_size)
+    page        = max(0, min(page, total_pages - 1))
+    start       = page * page_size
+    page_items  = queue[start : start + page_size]
 
     lines = []
     for i, track in enumerate(page_items, start=start + 1):
@@ -185,115 +174,230 @@ def _queue_list_components(queue: list, page: int = 0) -> list[dict]:
 
     content = "\n".join(lines) if lines else "キューは空です"
 
-    components: list[dict] = [
+    nav_buttons = []
+    if page > 0:
+        nav_buttons.append({
+            "type": 2, "style": 1,
+            "label": "◀ 前へ",
+            "custom_id": f"music:queue_page:{page - 1}",
+        })
+    if page < total_pages - 1:
+        nav_buttons.append({
+            "type": 2, "style": 1,
+            "label": "次へ ▶",
+            "custom_id": f"music:queue_page:{page + 1}",
+        })
+    nav_buttons.append({"type": 2, "style": 3, "label": "🔀 シャッフル", "custom_id": "music:shuffle"})
+    nav_buttons.append({"type": 2, "style": 4, "label": "🗑 全クリア",   "custom_id": "music:queue_clear"})
+
+    comps: list[dict] = [
         {
             "type": 17,
             "accent_color": 0xFEE75C,
             "components": [
-                {"type": 10, "content": f"## 📋 キュー一覧 ({len(queue)}曲) — {page+1}/{total_pages}ページ"},
+                {"type": 10, "content": (
+                    f"## 📋 キュー一覧 ({len(queue)}曲) — "
+                    f"{page + 1}/{total_pages}ページ"
+                )},
                 {"type": 14, "spacing": 1},
                 {"type": 10, "content": content},
+                {"type": 14, "spacing": 1},
+                {"type": 1, "components": nav_buttons},
             ],
         }
     ]
-
-    # ページネーションボタン
-    nav_buttons = []
-    if page > 0:
-        nav_buttons.append({"type": 2, "style": 1, "label": "◀ 前へ", "custom_id": f"music:queue_page:{page-1}"})
-    if page < total_pages - 1:
-        nav_buttons.append({"type": 2, "style": 1, "label": "次へ ▶", "custom_id": f"music:queue_page:{page+1}"})
-    nav_buttons.append({"type": 2, "style": 4, "label": "🔀 シャッフル", "custom_id": "music:shuffle"})
-    nav_buttons.append({"type": 2, "style": 2, "label": "🗑 全クリア", "custom_id": "music:queue_clear"})
-
-    if nav_buttons:
-        components[0]["components"].append({"type": 1, "components": nav_buttons})
-
-    return components
+    return comps
 
 
-# ─── Persistent Interaction View ─────────────────────────────────────
+def _simple_components(text: str, accent: int = 0x5865F2) -> list[dict]:
+    """シンプルなテキスト1行コンテナ"""
+    return [
+        {
+            "type": 17,
+            "accent_color": accent,
+            "components": [{"type": 10, "content": text}],
+        }
+    ]
+
+
+# ════════════════════════════════════════════════════════════════
+# Persistent View（ボタン / セレクトのコールバック受け取り）
+# ════════════════════════════════════════════════════════════════
 
 class MusicControlView(discord.ui.View):
     """
     add_view 登録用 Persistent View。
-    コンポーネントのコールバックを受け取るために存在する。
+    NowPlayingUI・キューUI・検索UIのすべてのインタラクションをここで受け取る。
+    queue_page など動的 custom_id は on_interaction で処理する。
     """
 
     def __init__(self, cog: "Music") -> None:
         super().__init__(timeout=None)
         self._cog = cog
 
+    # ── NowPlaying ボタン ────────────────────────────────────────
+
     @discord.ui.button(custom_id="music:skip", label="⏭ スキップ", style=discord.ButtonStyle.danger)
     async def skip_btn(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
         await interaction.response.defer()
-        await self._cog._do_skip(interaction)
+        guild = interaction.guild
+        if guild and guild.voice_client and guild.voice_client.is_playing():
+            guild.voice_client.stop()
 
     @discord.ui.button(custom_id="music:pause", label="⏸ 一時停止", style=discord.ButtonStyle.primary)
     async def pause_btn(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
         await interaction.response.defer()
-        await self._cog._do_pause(interaction)
+        guild = interaction.guild
+        if guild and guild.voice_client:
+            vc = guild.voice_client
+            if vc.is_playing():
+                vc.pause()
+            # is_playing でない場合でも defer 済みなので失敗しない
 
     @discord.ui.button(custom_id="music:resume", label="▶ 再開", style=discord.ButtonStyle.primary)
     async def resume_btn(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
         await interaction.response.defer()
-        await self._cog._do_resume(interaction)
+        guild = interaction.guild
+        if guild and guild.voice_client and guild.voice_client.is_paused():
+            guild.voice_client.resume()
 
     @discord.ui.button(custom_id="music:stop", label="⏹ 停止", style=discord.ButtonStyle.secondary)
     async def stop_btn(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
         await interaction.response.defer()
-        await self._cog._do_stop(interaction)
+        guild = interaction.guild
+        if guild is None:
+            return
+        state = self._cog.bot.guild_manager.get(guild.id)
+        state.queue.clear()
+        state.current = None
+        if guild.voice_client:
+            guild.voice_client.stop()
 
-    @discord.ui.button(custom_id="music:shuffle", label="🔀 シャッフル", style=discord.ButtonStyle.danger)
-    async def shuffle_btn(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
-        await interaction.response.defer()
-        await self._cog._do_shuffle(interaction)
-
-    @discord.ui.button(custom_id="music:queue_clear", label="🗑 全クリア", style=discord.ButtonStyle.secondary)
-    async def clear_btn(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
-        await interaction.response.defer()
-        await self._cog._do_clear(interaction)
-
-    @discord.ui.select(custom_id="music:loop_select", options=[
-        discord.SelectOption(label="ループなし", value="none"),
-        discord.SelectOption(label="1曲ループ", value="one"),
-        discord.SelectOption(label="全体ループ", value="all"),
-    ])
+    @discord.ui.select(
+        custom_id="music:loop_select",
+        options=[
+            discord.SelectOption(label="🔁 ループなし", value="none"),
+            discord.SelectOption(label="🔂 1曲ループ",  value="one"),
+            discord.SelectOption(label="🔁 全体ループ", value="all"),
+        ],
+    )
     async def loop_select(self, interaction: discord.Interaction, select: discord.ui.Select) -> None:
         await interaction.response.defer()
-        await self._cog._do_loop(interaction, select.values[0])
+        if interaction.guild:
+            state = self._cog.bot.guild_manager.get(interaction.guild.id)
+            state.loop_mode = select.values[0]
 
-    @discord.ui.select(custom_id="music:search_select", options=[
-        discord.SelectOption(label="placeholder", value="0"),
-    ])
+    # ── キューUI ボタン ──────────────────────────────────────────
+
+    @discord.ui.button(custom_id="music:shuffle", label="🔀 シャッフル", style=discord.ButtonStyle.success)
+    async def shuffle_btn(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+        if interaction.guild is None:
+            await interaction.response.defer()
+            return
+        state = self._cog.bot.guild_manager.get(interaction.guild.id)
+        random.shuffle(state.queue)
+        comps = _queue_components(state.queue, 0)
+        await _edit_v2(self._cog.bot, interaction.channel_id, interaction.message.id, comps)
+        await interaction.response.defer()
+
+    @discord.ui.button(custom_id="music:queue_clear", label="🗑 全クリア", style=discord.ButtonStyle.danger)
+    async def clear_btn(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+        if interaction.guild is None:
+            await interaction.response.defer()
+            return
+        state = self._cog.bot.guild_manager.get(interaction.guild.id)
+        state.queue.clear()
+        comps = _queue_components([], 0)
+        await _edit_v2(self._cog.bot, interaction.channel_id, interaction.message.id, comps)
+        await interaction.response.defer()
+
+    # ── 検索 セレクト ────────────────────────────────────────────
+
+    @discord.ui.select(
+        custom_id="music:search_select",
+        options=[discord.SelectOption(label="placeholder", value="0")],
+    )
     async def search_select(self, interaction: discord.Interaction, select: discord.ui.Select) -> None:
         await interaction.response.defer()
-        await self._cog._do_search_select(interaction, select.values[0])
+        if interaction.guild is None:
+            return
+        guild_id = interaction.guild.id
+        results  = self._cog._search_cache.get(guild_id, [])
+        try:
+            idx = int(select.values[0])
+        except (ValueError, IndexError):
+            return
+        if idx >= len(results):
+            return
+
+        track = results[idx]
+        await self._cog._add_to_queue(guild_id, [track], interaction.user.id)
+
+        try:
+            await interaction.message.delete()
+        except Exception:
+            pass
+
+        vc: discord.VoiceClient | None = interaction.guild.voice_client
+        if vc and not vc.is_playing():
+            await self._cog._advance(guild_id)
+        else:
+            await _post_v2(
+                self._cog.bot,
+                interaction.channel_id,
+                _simple_components(f"✅ **{track['title']}** をキューに追加しました。", 0x57F287),
+            )
 
     @discord.ui.button(custom_id="music:search_cancel", label="キャンセル", style=discord.ButtonStyle.secondary)
     async def search_cancel(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
-        await interaction.message.delete()
+        try:
+            await interaction.message.delete()
+        except Exception:
+            pass
+        if not interaction.response.is_done():
+            await interaction.response.defer()
+
+    # ── 動的 custom_id（queue_page）を on_interaction で処理 ────
+
+    @commands.Cog.listener()
+    async def on_interaction(self, interaction: discord.Interaction) -> None:
+        """queue:page:{n} のような動的 custom_id をここで処理する"""
+        if interaction.type != discord.InteractionType.component:
+            return
+        custom_id: str = interaction.data.get("custom_id", "")
+        if not custom_id.startswith("music:queue_page:"):
+            return
+        try:
+            page = int(custom_id.split(":")[-1])
+        except ValueError:
+            await interaction.response.defer()
+            return
+
+        if interaction.guild is None:
+            await interaction.response.defer()
+            return
+
+        state = self._cog.bot.guild_manager.get(interaction.guild.id)
+        comps = _queue_components(state.queue, page)
+        await _edit_v2(self._cog.bot, interaction.channel_id, interaction.message.id, comps)
         await interaction.response.defer()
 
-    async def _handle_queue_page(self, interaction: discord.Interaction, page: int) -> None:
-        state = self._cog.bot.guild_manager.get(interaction.guild_id)
-        await edit_v2(interaction, _queue_list_components(state.queue, page))
-        await interaction.response.defer()
 
-
-# ─── Music Cog ────────────────────────────────────────────────────────
+# ════════════════════════════════════════════════════════════════
+# Music Cog
+# ════════════════════════════════════════════════════════════════
 
 class Music(commands.Cog):
     def __init__(self, bot: "IrohaBot") -> None:
         self.bot = bot
-        self._search_cache: dict[int, list[dict]] = {}  # guild_id -> results
+        self._search_cache: dict[int, list[dict]] = {}
 
     @commands.Cog.listener()
     async def on_ready(self) -> None:
         self.bot.add_view(MusicControlView(self))
         log.info("MusicControlView registered (persistent).")
 
-    # ─── 接続ヘルパー ─────────────────────────────────────────────────
+    # ── ボイス接続ヘルパー ───────────────────────────────────────
 
     async def _ensure_voice(self, ctx: commands.Context) -> discord.VoiceClient | None:
         if ctx.author.voice is None:
@@ -311,17 +415,19 @@ class Music(commands.Cog):
         state.text_channel_id = ctx.channel.id
         return vc
 
-    # ─── キュー追加 & 再生エンジン ────────────────────────────────────
+    # ── キュー追加 ───────────────────────────────────────────────
 
     async def _add_to_queue(self, guild_id: int, tracks: list[dict], requester_id: int) -> None:
-        state = self.bot.guild_manager.get(guild_id)
+        state    = self.bot.guild_manager.get(guild_id)
         settings = await self.bot.guild_manager.get_settings(guild_id)
-        max_q = settings.get("max_queue", 200)
+        max_q    = settings.get("max_queue", 200)
         for track in tracks:
             if len(state.queue) >= max_q:
                 break
             track["requester_id"] = requester_id
             state.queue.append(track)
+
+    # ── 再生エンジン ─────────────────────────────────────────────
 
     def _after_track(self, guild_id: int, error: Exception | None) -> None:
         if error:
@@ -339,7 +445,7 @@ class Music(commands.Cog):
 
         # ループ処理
         if state.loop_mode == "one" and state.current:
-            pass  # 同じ曲を再度追加
+            pass  # キューに再追加しない（同じ曲を再生）
         elif state.loop_mode == "all" and state.current:
             state.queue.append(state.current)
 
@@ -348,30 +454,29 @@ class Music(commands.Cog):
             await self._schedule_auto_leave(guild_id, guild)
             return
 
-        # シャッフル
         if state.shuffle:
-            import random
             random.shuffle(state.queue)
 
-        next_track = state.queue.pop(0)
-        state.current = next_track
+        next_track     = state.queue.pop(0)
+        state.current  = next_track
         await self._play_track(guild_id, vc, next_track)
 
-    async def _play_track(self, guild_id: int, vc: discord.VoiceClient, track: dict) -> None:
-        state = self.bot.guild_manager.get(guild_id)
+    async def _play_track(
+        self, guild_id: int, vc: discord.VoiceClient, track: dict
+    ) -> None:
+        state     = self.bot.guild_manager.get(guild_id)
         audio_cfg = await self.bot.guild_manager.get_audio_settings(guild_id)
-        import json
-        eq_bands = json.loads(audio_cfg.get("eq_bands", "{}"))
+        eq_bands  = json.loads(audio_cfg.get("eq_bands", "{}"))
 
-        # ストリームURLは期限付きのため、再生直前に webpage_url から最新を取得する
+        # ストリームURLは期限付きのため再生直前に再取得
         webpage_url = track.get("webpage_url", "")
-        stream_url = await YTDLSource.get_stream_url(webpage_url)
+        stream_url  = await YTDLSource.get_stream_url(webpage_url)
         if not stream_url:
             log.error(f"[Guild {guild_id}] ストリームURL取得失敗: {webpage_url}")
-            # 取得失敗時は次の曲へスキップ
             self._after_track(guild_id, None)
             return
 
+        # FFmpegエラーをキャッチして分かりやすく通知
         try:
             source = make_ffmpeg_source(
                 stream_url,
@@ -383,110 +488,94 @@ class Music(commands.Cog):
             )
         except discord.ClientException as e:
             log.error(f"[Guild {guild_id}] FFmpeg起動失敗: {e}")
-            err_channel = self.bot.get_channel(
-                (await self.bot.guild_manager.get_settings(guild_id)).get("music_channel_id")
-                or vc.channel.id
-            )
-            if err_channel and isinstance(err_channel, discord.TextChannel):
-                err_comps = [
-                    {
-                        "type": 17,
-                        "accent_color": 0xED4245,
-                        "components": [
-                            {
-                                "type": 10,
-                                "content": (
-                                    "## \u274c ffmpeg が見つかりません\n"
-                                    "音楽再生には `ffmpeg` が必要です。\n\n"
-                                    "**インストール方法:**\n"
-                                    "```\n"
-                                    "sudo apt update && sudo apt install ffmpeg\n"
-                                    "```\n"
-                                    "インストール後にBotを再起動してください。"
-                                ),
-                            }
-                        ],
-                    }
-                ]
-                try:
-                    await self.bot.http.request(
-                        discord.http.Route(
-                            "POST", "/channels/{channel_id}/messages",
-                            channel_id=err_channel.id,
-                        ),
-                        json={"flags": 1 << 15, "components": err_comps},
-                    )
-                except Exception:
-                    pass
+            ch_id = state.text_channel_id
+            if ch_id:
+                await _post_v2(
+                    self.bot, ch_id,
+                    _simple_components(
+                        "## ❌ ffmpeg が見つかりません\n"
+                        "音楽再生には `ffmpeg` が必要です。\n"
+                        "```\nsudo apt install ffmpeg\n```",
+                        0xED4245,
+                    ),
+                )
             return
 
         vc.play(source, after=lambda e: self._after_track(guild_id, e))
         state.is_playing = True
         state.skip_votes.clear()
 
-        # 再生統計記録
         await self._record_stat(guild_id, track)
+        await self._send_now_playing(guild_id, state, track, vc)
 
-        # Now Playing UI 送信
-        # 優先順位: DB設定チャンネル > コマンドを打ったテキストチャンネル
+    async def _send_now_playing(
+        self, guild_id: int, state, track: dict, vc: discord.VoiceClient
+    ) -> None:
+        """NowPlaying UI を送信する"""
         settings = await self.bot.guild_manager.get_settings(guild_id)
-        ch_id = (
-            settings.get("music_channel_id")
-            or state.text_channel_id
-        )
-        channel = self.bot.get_channel(ch_id) if ch_id else None
+        ch_id    = settings.get("music_channel_id") or state.text_channel_id
+        if not ch_id:
+            log.warning(f"[Guild {guild_id}] NowPlaying送信先チャンネルが未設定")
+            return
 
-        if channel and isinstance(channel, (discord.TextChannel, discord.Thread)):
-            comps = _now_playing_components(
-                track,
-                int(state.volume * 100),
-                state.loop_mode,
-                0,
-                len(state.queue),
-            )
-            try:
-                await self.bot.http.request(
-                    discord.http.Route("POST", "/channels/{channel_id}/messages", channel_id=channel.id),
-                    json={"flags": 1 << 15, "components": comps},
-                )
-                log.debug(f"[Guild {guild_id}] NowPlaying UI sent to #{channel.name}")
-            except Exception as e:
-                log.warning(f"Failed to send NowPlaying UI: {e}")
-        else:
-            log.warning(f"[Guild {guild_id}] NowPlaying送信先チャンネルが見つかりません (ch_id={ch_id})")
+        channel = self.bot.get_channel(ch_id)
+        if not channel or not isinstance(channel, (discord.TextChannel, discord.Thread)):
+            log.warning(f"[Guild {guild_id}] チャンネルが見つかりません (id={ch_id})")
+            return
+
+        comps = _now_playing_components(
+            track,
+            int(state.volume * 100),
+            state.loop_mode,
+            len(state.queue),
+        )
+        try:
+            await _post_v2(self.bot, ch_id, comps)
+            log.debug(f"[Guild {guild_id}] NowPlaying sent → #{channel.name}")
+        except Exception as e:
+            log.warning(f"[Guild {guild_id}] NowPlaying送信失敗: {e}")
 
     async def _record_stat(self, guild_id: int, track: dict) -> None:
         try:
             await self.bot.db.execute(
                 """INSERT INTO music_stats(guild_id, user_id, title, url, duration)
                    VALUES(?, ?, ?, ?, ?)""",
-                (guild_id, track.get("requester_id", 0), track["title"], track.get("webpage_url", ""), track.get("duration", 0)),
+                (
+                    guild_id,
+                    track.get("requester_id", 0),
+                    track["title"],
+                    track.get("webpage_url", ""),
+                    track.get("duration", 0),
+                ),
             )
             await self.bot.db.commit()
         except Exception as e:
             log.warning(f"Failed to record stat: {e}")
 
     async def _schedule_auto_leave(self, guild_id: int, guild: discord.Guild) -> None:
-        state = self.bot.guild_manager.get(guild_id)
+        state    = self.bot.guild_manager.get(guild_id)
         settings = await self.bot.guild_manager.get_settings(guild_id)
-        delay = settings.get("auto_leave_sec", 300)
+        delay    = settings.get("auto_leave_sec", 300)
 
-        async def _leave():
+        async def _leave() -> None:
             await asyncio.sleep(delay)
-            vc: discord.VoiceClient | None = guild.voice_client
+            vc = guild.voice_client
             if vc and vc.is_connected() and not vc.is_playing():
                 await vc.disconnect()
-                log.info(f"[Guild {guild_id}] Auto-disconnected after {delay}s of inactivity.")
+                log.info(f"[Guild {guild_id}] {delay}秒無音のため自動切断")
 
         if state.auto_leave_task:
             state.auto_leave_task.cancel()
         state.auto_leave_task = asyncio.create_task(_leave())
 
-    # ─── コマンド ────────────────────────────────────────────────────
+    # ════════════════════════════════════════════════════════════
+    # コマンド定義
+    # ════════════════════════════════════════════════════════════
 
     @commands.hybrid_command(name="play", aliases=["p"])
     async def play(self, ctx: commands.Context, *, query: str) -> None:
         """URLまたは検索ワードで音楽を再生する"""
+        await _ack(ctx)
         try:
             vc = await self._ensure_voice(ctx)
             if vc is None:
@@ -499,19 +588,24 @@ class Music(commands.Cog):
                 await ctx.send("❌ 検索結果が見つかりませんでした。")
                 return
 
-            if YTDLSource._is_url(query) and len(results) == 1:
-                # 直接再生
+            if YTDLSource._is_url(query):
+                # URL → 直接キューに追加して再生
                 track = results[0]
                 await self._add_to_queue(ctx.guild.id, [track], ctx.author.id)
                 if not vc.is_playing():
                     await self._advance(ctx.guild.id)
                 else:
-                    await ctx.send(f"✅ **{track['title']}** をキューに追加しました。")
+                    await _post_v2(
+                        self.bot, ctx.channel.id,
+                        _simple_components(f"✅ **{track['title']}** をキューに追加しました。", 0x57F287),
+                    )
             else:
-                # 検索結果表示（LayoutView）
+                # キーワード → 検索結果選択UI
                 self._search_cache[ctx.guild.id] = results
-                comps = _search_result_components(results[:5], query)
-                await send_v2(ctx, comps)
+                await _post_v2(
+                    self.bot, ctx.channel.id,
+                    _search_result_components(results[:5], query),
+                )
         except Exception as e:
             import traceback
             traceback.print_exc()
@@ -519,12 +613,13 @@ class Music(commands.Cog):
 
     @commands.hybrid_command(name="search", aliases=["s"])
     async def search(self, ctx: commands.Context, *, query: str) -> None:
-        """検索して選択画面を出す"""
+        """キーワードで検索して選択画面を表示する"""
         await self.play(ctx, query=query)
 
     @commands.hybrid_command(name="playlist", aliases=["pl"])
     async def playlist(self, ctx: commands.Context, url: str) -> None:
         """プレイリストURLを丸ごと追加する"""
+        await _ack(ctx)
         try:
             vc = await self._ensure_voice(ctx)
             if vc is None:
@@ -544,15 +639,82 @@ class Music(commands.Cog):
             await ctx.send(f"```\n{type(e).__name__}: {e}\n```")
 
     @commands.hybrid_command(name="queue", aliases=["q"])
-    async def queue(self, ctx: commands.Context) -> None:
-        """キューを表示する"""
+    async def queue_cmd(self, ctx: commands.Context) -> None:
+        """キュー一覧を表示する"""
+        await _ack(ctx)
         state = self.bot.guild_manager.get(ctx.guild.id)
-        comps = _queue_list_components(state.queue, 0)
-        await send_v2(ctx, comps)
+        comps = _queue_components(state.queue, 0)
+        await _post_v2(self.bot, ctx.channel.id, comps)
+
+    @commands.hybrid_command(name="nowplaying", aliases=["np"])
+    async def nowplaying(self, ctx: commands.Context) -> None:
+        """現在再生中の曲を表示する"""
+        await _ack(ctx)
+        state = self.bot.guild_manager.get(ctx.guild.id)
+        if not state.current:
+            await ctx.send("❌ 現在再生中の曲はありません。")
+            return
+        comps = _now_playing_components(
+            state.current, int(state.volume * 100), state.loop_mode, len(state.queue)
+        )
+        await _post_v2(self.bot, ctx.channel.id, comps)
+
+    @commands.hybrid_command(name="pause")
+    async def pause(self, ctx: commands.Context) -> None:
+        """再生を一時停止する"""
+        await _ack(ctx)
+        vc = ctx.voice_client
+        if vc and vc.is_playing():
+            vc.pause()
+            await ctx.send("⏸ 一時停止しました。")
+        else:
+            await ctx.send("❌ 再生中の曲がありません。")
+
+    @commands.hybrid_command(name="resume")
+    async def resume(self, ctx: commands.Context) -> None:
+        """一時停止を解除する"""
+        await _ack(ctx)
+        vc = ctx.voice_client
+        if vc and vc.is_paused():
+            vc.resume()
+            await ctx.send("▶ 再開しました。")
+        else:
+            await ctx.send("❌ 一時停止中の曲がありません。")
+
+    @commands.hybrid_command(name="skip")
+    async def skip(self, ctx: commands.Context) -> None:
+        """曲をスキップする（投票スキップ）"""
+        await _ack(ctx)
+        state = self.bot.guild_manager.get(ctx.guild.id)
+        vc    = ctx.voice_client
+        if not vc or not vc.is_playing():
+            await ctx.send("❌ 再生中の曲がありません。")
+            return
+        state.skip_votes.add(ctx.author.id)
+        members = [m for m in vc.channel.members if not m.bot]
+        needed  = max(1, len(members) // 2)
+        votes   = len(state.skip_votes)
+        if votes >= needed:
+            vc.stop()
+            await ctx.send(f"⏭ スキップしました。({votes}/{needed} 票)")
+        else:
+            await ctx.send(f"🗳 スキップ投票: {votes}/{needed} 票")
+
+    @commands.hybrid_command(name="stop")
+    async def stop(self, ctx: commands.Context) -> None:
+        """再生を停止してキューをクリアする"""
+        await _ack(ctx)
+        state = self.bot.guild_manager.get(ctx.guild.id)
+        state.queue.clear()
+        state.current = None
+        if ctx.voice_client:
+            ctx.voice_client.stop()
+        await ctx.send("⏹ 停止しました。")
 
     @commands.hybrid_command(name="volume", aliases=["vol"])
     async def volume(self, ctx: commands.Context, vol: int) -> None:
         """音量を変更する (1-150)"""
+        await _ack(ctx)
         if not 1 <= vol <= 150:
             await ctx.send("❌ 音量は 1〜150 で指定してください。")
             return
@@ -562,49 +724,10 @@ class Music(commands.Cog):
             ctx.voice_client.source.volume = state.volume
         await ctx.send(f"🔊 音量を **{vol}%** に設定しました。")
 
-    @commands.hybrid_command(name="skip")
-    async def skip(self, ctx: commands.Context) -> None:
-        """曲をスキップする（投票スキップ）"""
-        state = self.bot.guild_manager.get(ctx.guild.id)
-        vc = ctx.voice_client
-        if not vc or not vc.is_playing():
-            await ctx.send("❌ 再生中の曲がありません。")
-            return
-        state.skip_votes.add(ctx.author.id)
-        members = [m for m in vc.channel.members if not m.bot]
-        needed = max(1, len(members) // 2)
-        votes = len(state.skip_votes)
-        if votes >= needed:
-            vc.stop()
-            await ctx.send(f"⏭ スキップしました。({votes}/{needed} 票)")
-        else:
-            await ctx.send(f"🗳 スキップ投票: {votes}/{needed} 票")
-
-    @commands.hybrid_command(name="stop")
-    async def stop(self, ctx: commands.Context) -> None:
-        """再生を停止してキューをクリア"""
-        state = self.bot.guild_manager.get(ctx.guild.id)
-        state.queue.clear()
-        state.current = None
-        if ctx.voice_client:
-            ctx.voice_client.stop()
-        await ctx.send("⏹ 停止しました。")
-
-    @commands.hybrid_command(name="pause")
-    async def pause(self, ctx: commands.Context) -> None:
-        if ctx.voice_client and ctx.voice_client.is_playing():
-            ctx.voice_client.pause()
-            await ctx.send("⏸ 一時停止しました。")
-
-    @commands.hybrid_command(name="resume")
-    async def resume(self, ctx: commands.Context) -> None:
-        if ctx.voice_client and ctx.voice_client.is_paused():
-            ctx.voice_client.resume()
-            await ctx.send("▶ 再開しました。")
-
     @commands.hybrid_command(name="loop")
     async def loop(self, ctx: commands.Context, mode: str = "one") -> None:
-        """ループモード設定: none / one / all"""
+        """ループモード設定 (none / one / all)"""
+        await _ack(ctx)
         mode = mode.lower()
         if mode not in ("none", "one", "all"):
             await ctx.send("❌ mode は `none` / `one` / `all` で指定してください。")
@@ -616,108 +739,21 @@ class Music(commands.Cog):
 
     @commands.hybrid_command(name="shuffle")
     async def shuffle(self, ctx: commands.Context) -> None:
-        """シャッフルON/OFF"""
+        """シャッフル ON/OFF を切り替える"""
+        await _ack(ctx)
         state = self.bot.guild_manager.get(ctx.guild.id)
         state.shuffle = not state.shuffle
-        status = "ON" if state.shuffle else "OFF"
-        await ctx.send(f"🔀 シャッフルを **{status}** にしました。")
+        await ctx.send(f"🔀 シャッフルを **{'ON' if state.shuffle else 'OFF'}** にしました。")
 
     @commands.hybrid_command(name="leave", aliases=["dc"])
     async def leave(self, ctx: commands.Context) -> None:
-        """ボイスチャンネルから切断"""
+        """ボイスチャンネルから切断する"""
+        await _ack(ctx)
         if ctx.voice_client:
             await ctx.voice_client.disconnect()
             await ctx.send("👋 切断しました。")
-
-    # ─── Interaction コールバック ─────────────────────────────────────
-
-    async def _do_skip(self, interaction: discord.Interaction) -> None:
-        guild = interaction.guild
-        vc: discord.VoiceClient | None = guild.voice_client if guild else None
-        if vc and vc.is_playing():
-            vc.stop()
-
-    async def _do_pause(self, interaction: discord.Interaction) -> None:
-        guild = interaction.guild
-        vc: discord.VoiceClient | None = guild.voice_client if guild else None
-        if vc and vc.is_playing():
-            vc.pause()
-
-    async def _do_resume(self, interaction: discord.Interaction) -> None:
-        guild = interaction.guild
-        vc: discord.VoiceClient | None = guild.voice_client if guild else None
-        if vc and vc.is_paused():
-            vc.resume()
-
-    async def _do_stop(self, interaction: discord.Interaction) -> None:
-        guild = interaction.guild
-        if guild is None:
-            return
-        state = self.bot.guild_manager.get(guild.id)
-        state.queue.clear()
-        state.current = None
-        vc: discord.VoiceClient | None = guild.voice_client
-        if vc:
-            vc.stop()
-
-    async def _do_loop(self, interaction: discord.Interaction, mode: str) -> None:
-        if interaction.guild is None:
-            return
-        state = self.bot.guild_manager.get(interaction.guild.id)
-        state.loop_mode = mode
-
-    async def _do_shuffle(self, interaction: discord.Interaction) -> None:
-        if interaction.guild is None:
-            return
-        import random
-        state = self.bot.guild_manager.get(interaction.guild.id)
-        random.shuffle(state.queue)
-        comps = _queue_list_components(state.queue, 0)
-        await edit_v2(interaction, comps)
-
-    async def _do_clear(self, interaction: discord.Interaction) -> None:
-        if interaction.guild is None:
-            return
-        state = self.bot.guild_manager.get(interaction.guild.id)
-        state.queue.clear()
-        comps = _queue_list_components([], 0)
-        await edit_v2(interaction, comps)
-
-    async def _do_search_select(self, interaction: discord.Interaction, value: str) -> None:
-        if interaction.guild is None:
-            return
-        results = self._search_cache.get(interaction.guild.id, [])
-        idx = int(value)
-        if idx >= len(results):
-            return
-        track = results[idx]
-        guild_id = interaction.guild.id
-
-        # キューに追加
-        await self._add_to_queue(guild_id, [track], interaction.user.id)
-
-        # メッセージ削除
-        try:
-            await interaction.message.delete()
-        except Exception:
-            pass
-
-        # 再生開始
-        vc: discord.VoiceClient | None = interaction.guild.voice_client
-        if vc and not vc.is_playing():
-            await self._advance(guild_id)
         else:
-            await self.bot.http.request(
-                discord.http.Route("POST", "/channels/{channel_id}/messages", channel_id=interaction.channel_id),
-                json={
-                    "flags": 1 << 15,
-                    "components": [{
-                        "type": 17,
-                        "accent_color": 0x57F287,
-                        "components": [{"type": 10, "content": f"✅ **{track['title']}** をキューに追加しました。"}],
-                    }],
-                },
-            )
+            await ctx.send("❌ ボイスチャンネルに接続していません。")
 
 
 async def setup(bot: "IrohaBot") -> None:
