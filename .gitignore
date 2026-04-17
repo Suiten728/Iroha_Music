@@ -1,8 +1,11 @@
 .env
+ci/.env
 venv
 venv/*
-data/
-data/*
+# data/ ディレクトリ配下のSQLiteDB・キャッシュのみ除外（Pythonソースは管理対象）
+data/*.db
+data/*.db-wal
+data/*.db-shm
 logs
 logs/
 logs/*
@@ -10,5 +13,4 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-__init__.py
 .DS_Store

@@ -137,10 +137,30 @@ class PartyView(discord.ui.View):
         super().__init__(timeout=None)
         self._cog = cog
 
-    # ─── 動的 custom_id を on_interaction で一括処理 ────────────────────
-    # party:toggle / party:join_dj / party:next_dj / party:hype は
-    # guild_id が埋め込まれているため @discord.ui.button では登録不可
-    # → on_interaction で prefix マッチして処理する
+    # NOTE: party:toggle / party:join_dj / party:next_dj / party:hype /
+    #       quiz:ans: は guild_id が埋め込まれた動的 custom_id のため
+    #       @discord.ui.button では登録不可。
+    #       また discord.ui.View は @commands.Cog.listener() を解釈しない
+    #       （サイレント失敗）ため、on_interaction は Party Cog 側で定義する。
+
+
+# ── Party Cog ──────────────────────────────────────────────────────────
+
+class Party(commands.Cog):
+    def __init__(self, bot: "IrohaBot") -> None:
+        self.bot    = bot
+        self._states: dict[int, dict] = {}   # guild_id → state
+
+    @commands.Cog.listener()
+    async def on_ready(self) -> None:
+        self.bot.add_view(PartyView(self))
+        log.info("PartyView registered (persistent).")
+
+    # ── 動的 custom_id を Cog の on_interaction で一括処理 ──────────────
+    # party:toggle / party:join_dj / party:next_dj / party:hype / quiz:ans: は
+    # guild_id が埋め込まれた動的 custom_id のため @discord.ui.button で登録不可。
+    # PartyView (discord.ui.View) 内では Cog.listener() が動作しないため
+    # Party Cog 側に on_interaction を定義する。
 
     @commands.Cog.listener()
     async def on_interaction(self, interaction: discord.Interaction) -> None:
@@ -151,23 +171,35 @@ class PartyView(discord.ui.View):
         # ─ party: 系 ────────────────────────────────────────
         if custom_id.startswith("party:toggle:"):
             await interaction.response.defer()
-            guild_id = int(custom_id.split(":")[-1])
-            await self._cog._toggle_party(interaction, guild_id)
+            try:
+                guild_id = int(custom_id.split(":")[-1])
+            except ValueError:
+                return
+            await self._toggle_party(interaction, guild_id)
 
         elif custom_id.startswith("party:join_dj:"):
             await interaction.response.defer()
-            guild_id = int(custom_id.split(":")[-1])
-            await self._cog._join_dj(interaction, guild_id)
+            try:
+                guild_id = int(custom_id.split(":")[-1])
+            except ValueError:
+                return
+            await self._join_dj(interaction, guild_id)
 
         elif custom_id.startswith("party:next_dj:"):
             await interaction.response.defer()
-            guild_id = int(custom_id.split(":")[-1])
-            await self._cog._next_dj(interaction, guild_id)
+            try:
+                guild_id = int(custom_id.split(":")[-1])
+            except ValueError:
+                return
+            await self._next_dj(interaction, guild_id)
 
         elif custom_id.startswith("party:hype:"):
             await interaction.response.defer()
-            guild_id = int(custom_id.split(":")[-1])
-            await self._cog._add_hype(interaction, guild_id)
+            try:
+                guild_id = int(custom_id.split(":")[-1])
+            except ValueError:
+                return
+            await self._add_hype(interaction, guild_id)
 
         # ─ quiz:ans: 系 ──────────────────────────────────────
         # quiz:ans:{guild_id}:{token}:{choice}:{correct}
@@ -182,20 +214,7 @@ class PartyView(discord.ui.View):
                 correct_idx = int(parts[5])
             except ValueError:
                 return
-            await self._cog._quiz_answer(interaction, guild_id, choice_idx, correct_idx)
-
-
-# ── Party Cog ──────────────────────────────────────────────────────────
-
-class Party(commands.Cog):
-    def __init__(self, bot: "IrohaBot") -> None:
-        self.bot    = bot
-        self._states: dict[int, dict] = {}   # guild_id → state
-
-    @commands.Cog.listener()
-    async def on_ready(self) -> None:
-        self.bot.add_view(PartyView(self))
-        log.info("PartyView registered (persistent).")
+            await self._quiz_answer(interaction, guild_id, choice_idx, correct_idx)
 
     def _get_state(self, guild_id: int) -> dict:
         if guild_id not in self._states:
