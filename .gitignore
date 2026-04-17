@@ -3,6 +3,9 @@ venv
 venv/*
 data/
 data/*
+logs
+logs/
+logs/*
 __pycache__/
 *.pyc
 *.pyo

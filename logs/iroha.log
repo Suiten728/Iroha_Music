@@ -43,3 +43,1304 @@
 2026-03-01 23:12:39 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=XMCxO2zQ0s0: https://rr3---sn-uxjoxu-3pm6.googlevideo.com/videoplayback?expire=1772395959&ei=...
 2026-03-01 23:12:39 [DEBUG] iroha.audio_engine: FFmpeg executable: /usr/bin/ffmpeg
 2026-03-01 23:12:39 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.30,alimiter=limit=0.99:level=1
+2026-03-02 00:40:44 [INFO] iroha.db: Database initialized.
+2026-03-02 00:40:44 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-02 00:40:47 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-02 00:40:47 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-02 00:40:47 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-02 00:40:47 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-02 00:41:27 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=j7mCHcDrRF8: https://rr2---sn-uxjoxu-3pmk.googlevideo.com/videoplayback?expire=1772401287&ei=...
+2026-03-02 00:41:27 [DEBUG] iroha.audio_engine: FFmpeg executable: /usr/bin/ffmpeg
+2026-03-02 00:41:27 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.80,alimiter=limit=0.99:level=1
+2026-03-02 00:41:27 [DEBUG] iroha.music: [Guild 1363116304764112966] NowPlaying UI sent to #bot-temp
+2026-03-02 00:43:16 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=Ol1o3dgPIbI: https://rr6---sn-uxjoxu-3pm6.googlevideo.com/videoplayback?expire=1772401396&ei=...
+2026-03-02 00:43:16 [DEBUG] iroha.audio_engine: FFmpeg executable: /usr/bin/ffmpeg
+2026-03-02 00:43:16 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.30,alimiter=limit=0.99:level=1
+2026-03-02 00:43:17 [DEBUG] iroha.music: [Guild 1363116304764112966] NowPlaying UI sent to #bot-temp
+2026-03-02 00:44:59 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=XMCxO2zQ0s0: https://rr3---sn-uxjoxu-3pm6.googlevideo.com/videoplayback?expire=1772401499&ei=...
+2026-03-02 00:44:59 [DEBUG] iroha.audio_engine: FFmpeg executable: /usr/bin/ffmpeg
+2026-03-02 00:44:59 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.30,alimiter=limit=0.99:level=1
+2026-03-02 00:44:59 [DEBUG] iroha.music: [Guild 1363116304764112966] NowPlaying UI sent to #bot-temp
+2026-03-02 00:45:45 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=hQ3rYiaUsUY: https://rr1---sn-uxjoxu-3pmr.googlevideo.com/videoplayback?expire=1772401545&ei=...
+2026-03-02 00:45:45 [DEBUG] iroha.audio_engine: FFmpeg executable: /usr/bin/ffmpeg
+2026-03-02 00:45:45 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.30,alimiter=limit=0.99:level=1
+2026-03-02 00:45:45 [DEBUG] iroha.music: [Guild 1363116304764112966] NowPlaying UI sent to #bot-temp
+2026-03-02 00:46:48 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=GBf_dIZUVIc: https://rr1---sn-uxjoxu-3pmr.googlevideo.com/videoplayback?expire=1772401608&ei=...
+2026-03-02 00:46:48 [DEBUG] iroha.audio_engine: FFmpeg executable: /usr/bin/ffmpeg
+2026-03-02 00:46:48 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.30,alimiter=limit=0.99:level=1
+2026-03-02 00:46:49 [DEBUG] iroha.music: [Guild 1363116304764112966] NowPlaying UI sent to #bot-temp
+2026-03-02 00:47:53 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=Tu2n-MKVPMs: https://rr6---sn-uxjoxu-3pm6.googlevideo.com/videoplayback?expire=1772401673&ei=...
+2026-03-02 00:47:53 [DEBUG] iroha.audio_engine: FFmpeg executable: /usr/bin/ffmpeg
+2026-03-02 00:47:53 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.30,alimiter=limit=0.99:level=1
+2026-03-02 20:25:46 [INFO] iroha.db: Database initialized.
+2026-03-02 20:25:46 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-02 20:25:49 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-02 20:25:49 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-02 20:25:49 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-02 20:30:29 [INFO] iroha.db: Database initialized.
+2026-03-02 20:30:30 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-02 20:30:33 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-02 20:30:33 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-02 20:30:33 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-02 20:30:33 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-02 20:31:33 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=zz2a9Q2Wru0: https://rr4---sn-uxjoxu-3pmr.googlevideo.com/videoplayback?expire=1772472693&ei=...
+2026-03-02 20:31:33 [DEBUG] iroha.audio_engine: FFmpeg executable: /usr/bin/ffmpeg
+2026-03-02 20:31:33 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.80,alimiter=limit=0.99:level=1
+2026-03-02 20:31:33 [DEBUG] iroha.music: [Guild 1363116304764112966] NowPlaying sent → #bot-temp
+2026-03-02 20:35:03 [ERROR] iroha: Command error in move: from_idx is a required argument that is missing.
+NoneType: None
+2026-03-02 20:36:29 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=qLMLzBYTTKQ: https://rr4---sn-uxjoxu-3pmr.googlevideo.com/videoplayback?expire=1772472989&ei=...
+2026-03-02 20:36:29 [DEBUG] iroha.audio_engine: FFmpeg executable: /usr/bin/ffmpeg
+2026-03-02 20:36:29 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.80,alimiter=limit=0.99:level=1
+2026-03-02 20:36:29 [DEBUG] iroha.music: [Guild 1363116304764112966] NowPlaying sent → #bot-temp
+2026-03-02 20:39:01 [INFO] iroha.db: Database initialized.
+2026-03-02 20:39:01 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-02 20:39:05 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-02 20:39:05 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-02 20:39:05 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-02 20:39:05 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-02 20:41:55 [ERROR] iroha.audio_engine: yt-dlp search error: [0;31mERROR:[0m [youtube] nF5niSuAg5E: Join this channel to get access to members-only content like this video, and other exclusive perks.
+2026-03-02 20:42:22 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=1YrG2WGeIJo: https://rr3---sn-uxjoxu-3pmk.googlevideo.com/videoplayback?expire=1772473342&ei=...
+2026-03-02 20:42:22 [DEBUG] iroha.audio_engine: FFmpeg executable: /usr/bin/ffmpeg
+2026-03-02 20:42:22 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.80,alimiter=limit=0.99:level=1
+2026-03-02 20:42:23 [DEBUG] iroha.music: [Guild 1363116304764112966] NowPlaying sent → #bot-temp
+2026-03-07 16:02:59 [INFO] iroha.db: Database initialized.
+2026-03-07 16:02:59 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-07 16:03:02 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-07 16:03:02 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-07 16:03:02 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-07 16:03:02 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-07 16:08:37 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-07 16:08:37 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-07 16:08:37 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-07 16:08:37 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-07 17:24:56 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=XMCxO2zQ0s0: https://rr3---sn-uxjoxu-3pm6.googlevideo.com/videoplayback?expire=1772893496&ei=...
+2026-03-07 17:24:56 [DEBUG] iroha.audio_engine: FFmpeg executable: /usr/bin/ffmpeg
+2026-03-07 17:24:56 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.80,bass=g=12:f=110:width_type=o:width=0.7,extrastereo=m=2.5,aecho=0.8:0.88:40:0.4,alimiter=limit=0.99:level=1
+2026-03-07 17:24:56 [ERROR] iroha: Command error in play: Command raised an exception: OSError: [Errno 5] Input/output error
+NoneType: None
+2026-03-07 17:25:32 [ERROR] iroha: Command error in playlist: Hybrid command raised an error: Command 'playlist' raised an exception: OSError: [Errno 5] Input/output error
+NoneType: None
+2026-03-07 17:26:34 [ERROR] iroha: Command error in playlist: Hybrid command raised an error: Command 'playlist' raised an exception: OSError: [Errno 5] Input/output error
+NoneType: None
+2026-03-07 17:27:55 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=XMCxO2zQ0s0: https://rr3---sn-uxjoxu-3pm6.googlevideo.com/videoplayback?expire=1772893675&ei=...
+2026-03-07 17:27:55 [DEBUG] iroha.audio_engine: FFmpeg executable: /usr/bin/ffmpeg
+2026-03-07 17:27:55 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.80,bass=g=12:f=110:width_type=o:width=0.7,extrastereo=m=2.5,aecho=0.8:0.88:40:0.4,alimiter=limit=0.99:level=1
+2026-03-07 17:27:55 [ERROR] iroha: Command error in play: Hybrid command raised an error: Command 'play' raised an exception: OSError: [Errno 5] Input/output error
+NoneType: None
+2026-03-07 17:28:36 [INFO] iroha.db: Database initialized.
+2026-03-07 17:28:36 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-07 17:28:39 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-07 17:28:39 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-07 17:28:39 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-07 17:28:39 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-07 17:29:20 [DEBUG] iroha.audio_engine: Stream URL fetched for https://www.youtube.com/watch?v=CupxdwBkk88: https://rr2---sn-uxjoxu-3pmr.googlevideo.com/videoplayback?expire=1772893760&ei=...
+2026-03-07 17:29:20 [DEBUG] iroha.audio_engine: FFmpeg executable: /usr/bin/ffmpeg
+2026-03-07 17:29:20 [DEBUG] iroha.audio_engine: FFmpeg af chain: volume=0.80,bass=g=12:f=110:width_type=o:width=0.7,extrastereo=m=2.5,aecho=0.8:0.88:40:0.4,alimiter=limit=0.99:level=1
+2026-03-07 17:34:30 [INFO] iroha.db: Database initialized.
+2026-03-07 17:34:30 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-07 17:34:34 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-07 17:34:34 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-07 17:34:34 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-07 17:34:34 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-07 17:34:34 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-07 17:35:39 [ERROR] iroha.music: [Guild 1363116304764112966] VC接続失敗: 
+2026-03-07 17:36:15 [ERROR] iroha.music: [Guild 1363116304764112966] VC接続失敗: 
+2026-03-07 17:40:44 [INFO] iroha.db: Database initialized.
+2026-03-07 17:40:44 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-07 17:40:48 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-07 17:40:48 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-07 17:40:48 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-07 17:40:48 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-07 17:40:48 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-07 17:41:44 [WARNING] iroha.music: [Guild 1363116304764112966] _advance: VoiceClient が None のためスキップ
+2026-03-07 17:42:41 [WARNING] iroha.music: [Guild 1363116304764112966] _advance: VoiceClient が None のためスキップ
+2026-03-07 17:44:31 [INFO] iroha.db: Database initialized.
+2026-03-07 17:44:31 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-07 17:44:34 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-07 17:44:34 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-07 17:44:34 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-07 17:44:34 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-07 17:44:34 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-07 17:45:52 [WARNING] iroha.music: [Guild 1363116304764112966] _advance: VoiceClient が None のためスキップ
+2026-03-07 17:49:20 [WARNING] iroha.music: [Guild 1363116304764112966] _advance: VoiceClient が None のためスキップ
+2026-03-07 17:55:20 [INFO] iroha.db: Database initialized.
+2026-03-07 17:55:20 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-07 17:55:23 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-07 17:55:23 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-07 17:55:23 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-07 17:55:23 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-07 17:55:23 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-07 19:54:52 [ERROR] iroha: Command error in play: Hybrid command raised an error: Command 'play' raised an exception: OSError: [Errno 5] Input/output error
+NoneType: None
+2026-03-07 19:59:54 [INFO] iroha.db: Database initialized.
+2026-03-07 19:59:54 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-07 19:59:58 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-07 19:59:58 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-07 19:59:58 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-07 19:59:58 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-07 19:59:58 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-07 20:09:51 [INFO] iroha.db: Database initialized.
+2026-03-07 20:09:51 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-07 20:09:55 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-07 20:09:55 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-07 20:09:55 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-07 20:09:55 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-07 20:09:55 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 02:26:30 [INFO] iroha.db: Database initialized.
+2026-03-08 02:26:30 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 02:26:33 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 02:26:33 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 02:26:33 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 02:26:33 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 02:26:33 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 02:27:16 [INFO] iroha.db: Database initialized.
+2026-03-08 02:27:16 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 02:27:20 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 02:27:20 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 02:27:20 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 02:27:20 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 02:27:20 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 11:54:31 [INFO] iroha.db: Database initialized.
+2026-03-08 11:54:31 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 11:54:34 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 11:54:34 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 11:54:34 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 11:54:34 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 11:54:34 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 12:48:36 [INFO] iroha.db: Database initialized.
+2026-03-08 12:48:36 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 12:48:39 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 12:48:39 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 12:48:39 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 12:48:39 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 12:48:39 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 12:49:31 [INFO] iroha.db: Database initialized.
+2026-03-08 12:49:31 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 12:49:34 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 12:49:34 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 12:49:34 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 12:49:34 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 12:49:34 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 13:16:06 [INFO] iroha.db: Database initialized.
+2026-03-08 13:16:06 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 13:16:10 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 13:16:10 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 13:16:10 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 13:16:10 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 13:16:10 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 14:44:53 [INFO] iroha.db: Database initialized.
+2026-03-08 14:44:53 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 14:44:57 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 14:44:57 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 14:44:57 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 14:44:57 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 14:44:57 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 14:53:00 [INFO] iroha.db: Database initialized.
+2026-03-08 14:53:00 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 14:53:03 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 14:53:03 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 14:53:03 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 14:53:03 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 14:53:03 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 15:58:06 [INFO] iroha.db: Database initialized.
+2026-03-08 15:58:06 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 15:58:10 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 15:58:10 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 15:58:10 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 15:58:10 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 15:58:10 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 17:42:17 [INFO] iroha.db: Database initialized.
+2026-03-08 17:42:17 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 17:42:20 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 17:42:20 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 17:42:20 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 17:42:20 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 17:42:20 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 17:45:25 [INFO] iroha.db: Database initialized.
+2026-03-08 17:45:25 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 17:45:28 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 17:45:28 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 17:45:28 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 17:45:28 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 17:45:28 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 20:51:17 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 20:51:17 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 20:51:17 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 20:51:17 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 20:51:17 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 20:56:39 [INFO] iroha.db: Database initialized.
+2026-03-08 20:56:39 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 20:56:42 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 20:56:42 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 20:56:42 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 20:56:42 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 20:56:42 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 21:28:32 [INFO] iroha.db: Database initialized.
+2026-03-08 21:28:32 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 21:28:36 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 21:28:36 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 21:28:36 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 21:28:36 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 21:28:36 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 21:29:52 [INFO] iroha.db: Database initialized.
+2026-03-08 21:29:53 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 21:29:56 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 21:29:56 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 21:29:56 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 21:29:56 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 21:29:56 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 21:40:58 [INFO] iroha.db: Database initialized.
+2026-03-08 21:40:58 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 21:41:02 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 21:41:02 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 21:41:02 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 21:41:02 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 21:41:02 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 21:41:46 [INFO] iroha.db: Database initialized.
+2026-03-08 21:41:46 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 21:41:49 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 21:41:49 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 21:41:49 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 21:41:49 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 21:41:49 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 21:43:27 [INFO] iroha.db: Database initialized.
+2026-03-08 21:43:28 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 21:43:31 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 21:43:31 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 21:43:31 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 21:43:31 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 21:43:31 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 22:13:24 [INFO] iroha.db: Database initialized.
+2026-03-08 22:13:24 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 22:13:28 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 22:13:28 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 22:13:28 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 22:13:28 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 22:13:28 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 22:16:38 [INFO] iroha.db: Database initialized.
+2026-03-08 22:16:38 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 22:16:41 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 22:16:41 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 22:16:41 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 22:16:41 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 22:16:41 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 22:20:53 [INFO] iroha.db: Database initialized.
+2026-03-08 22:20:53 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 22:20:57 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 22:20:57 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 22:20:57 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 22:20:57 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 22:20:57 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 22:24:53 [INFO] iroha.db: Database initialized.
+2026-03-08 22:24:53 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 22:24:56 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 22:24:56 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 22:24:56 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 22:24:56 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 22:24:56 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 22:46:16 [INFO] iroha.db: Database initialized.
+2026-03-08 22:46:17 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 22:46:20 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 22:46:20 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 22:46:20 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 22:46:20 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 22:46:20 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 22:56:39 [INFO] iroha.db: Database initialized.
+2026-03-08 22:56:39 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 22:56:42 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 22:56:42 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 22:56:42 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 22:56:42 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 22:56:42 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 23:00:32 [INFO] iroha.db: Database initialized.
+2026-03-08 23:00:32 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 23:00:35 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 23:00:35 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 23:00:35 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 23:00:35 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 23:00:35 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 23:02:01 [INFO] iroha.db: Database initialized.
+2026-03-08 23:02:01 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 23:02:04 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 23:02:04 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 23:02:04 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 23:02:04 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 23:02:04 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-08 23:34:01 [INFO] iroha.db: Database initialized.
+2026-03-08 23:34:01 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-08 23:34:05 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-08 23:34:05 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-08 23:34:05 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-08 23:34:05 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-08 23:34:05 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-09 13:31:47 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-09 13:31:47 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-09 13:31:47 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-09 13:31:47 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-09 13:31:47 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-09 14:46:14 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-09 14:46:14 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-09 14:46:14 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-09 14:46:14 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-09 14:46:14 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-09 15:46:08 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-09 15:46:08 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-09 15:46:08 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-09 15:46:08 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-09 15:46:08 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-09 16:53:19 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-09 16:53:19 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-09 16:53:19 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-09 16:53:19 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-09 16:53:19 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-09 18:08:42 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-09 18:08:42 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-09 18:08:42 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-09 18:08:42 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-09 18:08:42 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-09 18:28:36 [INFO] iroha.db: Database initialized.
+2026-03-09 18:28:36 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-09 18:28:39 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-09 18:28:39 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-09 18:28:39 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-09 18:28:39 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-09 18:28:39 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-09 18:47:16 [INFO] iroha.db: Database initialized.
+2026-03-09 18:47:16 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-09 18:47:19 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-09 18:47:19 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-09 18:47:19 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-09 18:47:19 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-09 18:47:19 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-09 21:17:38 [INFO] iroha.db: Database initialized.
+2026-03-09 21:17:38 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-09 21:17:41 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-09 21:17:41 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-09 21:17:41 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-09 21:17:41 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-09 21:17:41 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-09 23:18:21 [INFO] iroha.db: Database initialized.
+2026-03-09 23:18:21 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-09 23:18:24 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-09 23:18:24 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-09 23:18:24 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-09 23:18:24 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-09 23:18:24 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-09 23:26:10 [INFO] iroha.db: Database initialized.
+2026-03-09 23:26:10 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-09 23:26:14 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-09 23:26:14 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-09 23:26:14 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-09 23:26:14 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-09 23:26:14 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-09 23:56:34 [INFO] iroha.db: Database initialized.
+2026-03-09 23:56:34 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-09 23:56:37 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-09 23:56:37 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-09 23:56:37 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-09 23:56:37 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-09 23:56:37 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-09 23:59:04 [INFO] iroha.db: Database initialized.
+2026-03-09 23:59:04 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-09 23:59:08 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-09 23:59:08 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-09 23:59:08 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-09 23:59:08 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-09 23:59:08 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-10 00:08:48 [INFO] iroha.db: Database initialized.
+2026-03-10 00:08:48 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-10 00:08:52 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-10 00:08:52 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-10 00:08:52 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-10 00:08:52 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-10 00:08:52 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-10 00:18:08 [INFO] iroha.db: Database initialized.
+2026-03-10 00:18:08 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-10 00:18:11 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-10 00:18:11 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-10 00:18:11 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-10 00:18:11 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-10 00:18:11 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-12 17:20:06 [INFO] iroha.db: Database initialized.
+2026-03-12 17:20:06 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-12 17:20:09 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-12 17:20:09 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-12 17:20:09 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-12 17:20:09 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-12 17:20:09 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-13 17:21:58 [INFO] iroha.db: Database initialized.
+2026-03-13 17:21:58 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-13 17:22:02 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-13 17:22:02 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-13 17:22:02 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-13 17:22:02 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-13 17:22:02 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-13 22:31:30 [INFO] iroha.db: Database initialized.
+2026-03-13 22:31:30 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-13 22:31:34 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-13 22:31:34 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-13 22:31:34 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-13 22:31:34 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-13 22:31:34 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-15 00:54:50 [INFO] iroha.db: Database initialized.
+2026-03-15 00:54:50 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-15 00:54:54 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-15 00:54:54 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-15 00:54:54 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-15 00:54:54 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-15 00:54:54 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-16 19:00:21 [INFO] iroha.db: Database initialized.
+2026-03-16 19:00:21 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-16 19:00:25 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-16 19:00:25 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-16 19:00:25 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-16 19:00:25 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-16 19:00:25 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-17 07:10:34 [INFO] iroha.db: Database initialized.
+2026-03-17 07:10:34 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-17 07:10:37 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-17 07:10:37 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-17 07:10:37 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-17 07:10:37 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-17 07:10:37 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-17 17:54:27 [INFO] iroha.db: Database initialized.
+2026-03-17 17:54:27 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-17 17:54:30 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-17 17:54:30 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-17 17:54:30 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-17 17:54:30 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-17 17:54:30 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-17 23:11:40 [INFO] iroha.db: Database initialized.
+2026-03-17 23:11:40 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-17 23:11:44 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-17 23:11:44 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-17 23:11:44 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-17 23:11:44 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-17 23:11:44 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-18 18:24:45 [INFO] iroha.db: Database initialized.
+2026-03-18 18:24:45 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-18 18:24:49 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-18 18:24:49 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-18 18:24:49 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-18 18:24:49 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-18 18:24:49 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-18 21:37:57 [INFO] iroha.db: Database initialized.
+2026-03-18 21:37:57 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-18 21:38:01 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-18 21:38:01 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-18 21:38:01 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-18 21:38:01 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-18 21:38:01 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-18 21:39:06 [INFO] iroha.db: Database initialized.
+2026-03-18 21:39:06 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-18 21:39:09 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-18 21:39:09 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-18 21:39:09 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-18 21:39:09 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-18 21:39:09 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-18 21:43:56 [INFO] iroha.db: Database initialized.
+2026-03-18 21:43:56 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-18 21:43:59 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-18 21:43:59 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-18 21:43:59 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-18 21:43:59 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-18 21:43:59 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-19 22:05:41 [INFO] iroha.db: Database initialized.
+2026-03-19 22:05:41 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-19 22:05:44 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-19 22:05:44 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-19 22:05:44 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-19 22:05:44 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-19 22:05:44 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-20 09:28:11 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-20 09:28:11 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-20 09:28:11 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-20 09:28:11 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-20 09:28:11 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-20 10:56:55 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-20 10:56:55 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-20 10:56:55 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-20 10:56:55 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-20 10:56:55 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-20 12:05:32 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-20 12:05:32 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-20 12:05:32 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-20 12:05:32 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-20 12:05:32 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-20 13:10:50 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-20 13:10:50 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-20 13:10:50 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-20 13:10:50 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-20 13:10:50 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-20 13:59:30 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-20 13:59:30 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-20 13:59:30 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-20 13:59:30 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-20 13:59:30 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-20 14:22:19 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-20 14:22:19 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-20 14:22:19 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-20 14:22:19 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-20 14:22:19 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-21 20:26:53 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-21 20:26:53 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-21 20:26:53 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-21 20:26:53 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-21 20:26:53 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-22 14:02:30 [INFO] iroha.db: Database initialized.
+2026-03-22 14:02:30 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-22 14:02:34 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-22 14:02:34 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-22 14:02:34 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-22 14:02:34 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-22 14:02:34 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-22 20:43:55 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-22 20:43:55 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-22 20:43:55 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-22 20:43:55 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-22 20:43:55 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-23 04:25:13 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-23 04:25:13 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-23 04:25:13 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-23 04:25:13 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-23 04:25:13 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-23 05:39:00 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-23 05:39:00 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-23 05:39:00 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-23 05:39:00 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-23 05:39:00 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-23 06:05:17 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-23 06:05:17 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-23 06:05:17 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-23 06:05:17 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-23 06:05:17 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-23 07:11:44 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-23 07:11:44 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-23 07:11:44 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-23 07:11:44 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-23 07:11:44 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-23 08:43:57 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-23 08:43:57 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-23 08:43:57 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-23 08:43:57 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-23 08:43:57 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-23 09:42:01 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-23 09:42:01 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-23 09:42:01 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-23 09:42:01 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-23 09:42:01 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-23 10:17:42 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-23 10:17:42 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-23 10:17:42 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-23 10:17:42 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-23 10:17:42 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-23 10:36:12 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-23 10:36:12 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-23 10:36:12 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-23 10:36:12 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-23 10:36:12 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-23 11:03:36 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-23 11:03:36 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-23 11:03:36 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-23 11:03:36 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-23 11:03:36 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-23 12:13:16 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-23 12:13:16 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-23 12:13:16 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-23 12:13:16 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-23 12:13:16 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-23 12:38:03 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-23 12:38:03 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-23 12:38:03 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-23 12:38:03 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-23 12:38:03 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-23 13:29:49 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-23 13:29:49 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-23 13:29:49 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-23 13:29:49 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-23 13:29:49 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-23 14:06:15 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-23 14:06:15 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-23 14:06:15 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-23 14:06:15 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-23 14:06:15 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-23 15:45:20 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-23 15:45:20 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-23 15:45:20 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-23 15:45:20 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-23 15:45:20 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-23 16:23:09 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-23 16:23:09 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-23 16:23:09 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-23 16:23:09 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-23 16:23:09 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-23 17:03:32 [INFO] iroha.db: Database initialized.
+2026-03-23 17:03:32 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-23 17:03:35 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-23 17:03:35 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-23 17:03:35 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-23 17:03:35 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-23 17:03:35 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-24 18:49:18 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-24 18:49:18 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-24 18:49:18 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-24 18:49:18 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-24 18:49:18 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-24 22:23:06 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-24 22:23:06 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-24 22:23:06 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-24 22:23:06 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-24 22:23:06 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-24 22:36:53 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-24 22:36:53 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-24 22:36:53 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-24 22:36:53 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-24 22:36:53 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-24 23:35:28 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-24 23:35:28 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-24 23:35:28 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-24 23:35:28 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-24 23:35:28 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-25 00:24:53 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-25 00:24:53 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-25 00:24:53 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-25 00:24:53 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-25 00:24:53 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-25 00:40:22 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-25 00:40:22 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-25 00:40:22 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-25 00:40:22 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-25 00:40:22 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-25 01:09:43 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-25 01:09:43 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-25 01:09:43 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-25 01:09:43 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-25 01:09:43 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-25 01:09:55 [INFO] iroha.db: Database initialized.
+2026-03-25 01:09:55 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-25 01:09:59 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-25 01:09:59 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-25 01:09:59 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-25 01:09:59 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-25 01:09:59 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-25 01:09:59 [INFO] iroha.guild_manager: Initialized settings for guild 1276945666605846651
+2026-03-25 01:10:51 [DEBUG] iroha.music: [Guild 1363116304764112966] voice session cleared
+2026-03-25 01:11:20 [WARNING] iroha.music: [Guild 1363116304764112966] _advance: VoiceClient が None のためスキップ
+2026-03-25 01:15:40 [INFO] iroha.db: Database initialized.
+2026-03-25 01:15:40 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-25 01:15:43 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-25 01:15:43 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-25 01:15:43 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-25 01:15:43 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-25 01:15:43 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-25 01:16:32 [INFO] iroha.music: [Guild 1363116304764112966] VC接続試行 1/3
+2026-03-25 01:16:32 [INFO] iroha.music: [Guild 1363116304764112966] voice_state(None) 送信済み
+2026-03-25 01:16:32 [INFO] iroha.music: [Guild 1363116304764112966] セッションクリア確認 (0.0秒)
+2026-03-25 01:16:33 [WARNING] iroha.music: [Guild 1363116304764112966] 4017: セッション無効 → リセットして再試行
+2026-03-25 01:16:35 [INFO] iroha.music: [Guild 1363116304764112966] VC接続試行 2/3
+2026-03-25 01:16:35 [INFO] iroha.music: [Guild 1363116304764112966] voice_state(None) 送信済み
+2026-03-25 01:16:35 [INFO] iroha.music: [Guild 1363116304764112966] セッションクリア確認 (0.0秒)
+2026-03-25 01:16:36 [WARNING] iroha.music: [Guild 1363116304764112966] 4017: セッション無効 → リセットして再試行
+2026-03-25 01:16:40 [INFO] iroha.music: [Guild 1363116304764112966] VC接続試行 3/3
+2026-03-25 01:16:40 [INFO] iroha.music: [Guild 1363116304764112966] voice_state(None) 送信済み
+2026-03-25 01:16:40 [INFO] iroha.music: [Guild 1363116304764112966] セッションクリア確認 (0.0秒)
+2026-03-25 01:16:40 [WARNING] iroha.music: [Guild 1363116304764112966] 4017: セッション無効 → リセットして再試行
+2026-03-25 01:48:23 [INFO] iroha.db: Database initialized.
+2026-03-25 01:48:23 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-25 01:48:27 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-25 01:48:27 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-25 01:48:27 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-25 01:48:27 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-25 01:48:27 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-25 01:55:03 [INFO] iroha.db: Database initialized.
+2026-03-25 01:55:03 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-25 01:55:06 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-25 01:55:06 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-25 01:55:06 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-25 01:55:06 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-25 01:55:06 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-25 01:55:36 [INFO] iroha.db: Database initialized.
+2026-03-25 01:55:36 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-25 01:55:39 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-25 01:55:39 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-25 01:55:39 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-25 01:55:39 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-25 01:55:39 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-25 02:21:53 [INFO] iroha.db: Database initialized.
+2026-03-25 02:21:53 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-25 02:21:56 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-25 02:21:56 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-25 02:21:56 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-25 02:21:56 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-25 02:21:56 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-25 11:34:08 [INFO] iroha.db: Database initialized.
+2026-03-25 11:34:08 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-25 11:34:12 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-25 11:34:12 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-25 11:34:12 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-25 11:34:12 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-25 11:34:12 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-25 12:12:22 [INFO] iroha.db: Database initialized.
+2026-03-25 12:12:22 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-25 12:12:26 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-25 12:12:26 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-25 12:12:26 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-25 12:12:26 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-25 12:12:26 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-25 12:41:40 [INFO] iroha.db: Database initialized.
+2026-03-25 12:41:40 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-25 12:41:44 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-25 12:41:44 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-25 12:41:44 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-25 12:41:44 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-25 12:41:44 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-25 12:52:15 [INFO] iroha.db: Database initialized.
+2026-03-25 12:52:15 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-25 12:52:18 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-25 12:52:18 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-25 12:52:18 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-25 12:52:18 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-25 12:52:18 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-25 12:53:49 [INFO] iroha.db: Database initialized.
+2026-03-25 12:53:49 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-25 12:53:53 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-25 12:53:53 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-25 12:53:53 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-25 12:53:53 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-25 12:53:53 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-25 13:17:51 [INFO] iroha.db: Database initialized.
+2026-03-25 13:17:51 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-25 13:17:54 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-25 13:17:54 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-25 13:17:54 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-25 13:17:54 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-25 13:17:54 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-25 19:07:20 [INFO] iroha.db: Database initialized.
+2026-03-25 19:07:20 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-25 19:07:24 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-25 19:07:24 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-25 19:07:24 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-25 19:07:24 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-25 19:07:24 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-26 04:22:55 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-26 04:22:55 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-26 04:22:55 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-26 04:22:55 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-26 04:22:55 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-28 20:17:44 [INFO] iroha.db: Database initialized.
+2026-03-28 20:17:44 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-28 20:17:48 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-28 20:17:48 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-28 20:17:48 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-28 20:17:48 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-28 20:17:48 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-29 20:19:41 [INFO] iroha.db: Database initialized.
+2026-03-29 20:19:41 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-29 20:19:44 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-29 20:19:44 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-29 20:19:44 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-29 20:19:44 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-29 20:19:44 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-29 20:43:31 [INFO] iroha.db: Database initialized.
+2026-03-29 20:43:31 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-29 20:43:34 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-29 20:43:34 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-29 20:43:34 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-29 20:43:34 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-29 20:43:34 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-03-30 17:25:50 [INFO] iroha.db: Database initialized.
+2026-03-30 17:25:50 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-03-30 17:25:54 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-03-30 17:25:54 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-03-30 17:25:54 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-03-30 17:25:54 [INFO] iroha.party: PartyView registered (persistent).
+2026-03-30 17:25:54 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-01 11:11:11 [INFO] iroha.db: Database initialized.
+2026-04-01 11:11:11 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-04-01 11:11:14 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-01 11:11:14 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-01 11:11:14 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-01 11:11:14 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-01 11:11:14 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-01 12:29:06 [INFO] iroha.db: Database initialized.
+2026-04-01 12:29:07 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-04-01 12:29:10 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-01 12:29:10 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-01 12:29:10 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-01 12:29:10 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-01 12:29:10 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-01 12:29:33 [INFO] iroha.db: Database initialized.
+2026-04-01 12:29:33 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-04-01 12:30:10 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-01 12:30:10 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-01 12:30:10 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-01 12:30:10 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-01 12:30:10 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-01 12:31:42 [INFO] iroha.db: Database initialized.
+2026-04-01 12:31:42 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-04-01 12:31:45 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-01 12:31:45 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-01 12:31:45 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-01 12:31:45 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-01 12:31:45 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-01 12:33:07 [INFO] iroha.db: Database initialized.
+2026-04-01 12:33:07 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-04-01 12:33:10 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-01 12:33:10 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-01 12:33:10 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-01 12:33:10 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-01 12:33:10 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-01 18:14:36 [INFO] iroha.db: Database initialized.
+2026-04-01 18:14:37 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-04-01 18:14:40 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-01 18:14:40 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-01 18:14:40 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-01 18:14:40 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-01 18:14:40 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-04 10:32:21 [INFO] iroha.db: Database initialized.
+2026-04-04 10:32:21 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-04-04 10:32:24 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-04 10:32:24 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-04 10:32:24 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-04 10:32:24 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-04 10:32:24 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-04 23:35:48 [INFO] iroha.db: Database initialized.
+2026-04-04 23:35:48 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-04-04 23:35:53 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-04 23:35:53 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-04 23:35:53 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-04 23:35:53 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-04 23:35:53 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 03:58:47 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 03:58:47 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 03:58:47 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 03:58:47 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 03:58:47 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 04:45:34 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 04:45:34 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 04:45:34 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 04:45:34 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 04:45:34 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 05:31:00 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 05:31:00 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 05:31:00 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 05:31:00 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 05:31:00 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 05:44:17 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 05:44:17 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 05:44:17 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 05:44:17 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 05:44:17 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 06:25:35 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 06:25:35 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 06:25:35 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 06:25:35 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 06:25:35 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 06:49:18 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 06:49:18 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 06:49:18 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 06:49:18 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 06:49:18 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 07:22:49 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 07:22:49 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 07:22:49 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 07:22:49 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 07:22:49 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 08:01:25 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 08:01:25 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 08:01:25 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 08:01:25 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 08:01:25 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 08:42:36 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 08:42:36 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 08:42:36 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 08:42:36 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 08:42:36 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 09:44:56 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 09:44:56 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 09:44:56 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 09:44:56 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 09:44:56 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 10:23:14 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 10:23:14 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 10:23:14 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 10:23:14 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 10:23:14 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 12:39:32 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 12:39:32 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 12:39:32 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 12:39:32 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 12:39:32 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 13:06:45 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 13:06:45 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 13:06:45 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 13:06:45 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 13:06:45 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 13:17:55 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 13:17:55 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 13:17:55 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 13:17:55 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 13:17:55 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 14:02:31 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 14:02:31 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 14:02:31 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 14:02:31 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 14:02:31 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 14:41:30 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 14:41:30 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 14:41:30 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 14:41:30 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 14:41:30 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 15:37:47 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 15:37:47 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 15:37:47 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 15:37:47 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 15:37:47 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 16:22:32 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 16:22:32 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 16:22:32 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 16:22:32 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 16:22:32 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 16:47:02 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 16:47:02 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 16:47:02 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 16:47:02 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 16:47:02 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 18:41:37 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 18:41:37 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 18:41:37 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 18:41:37 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 18:41:37 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 19:27:37 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 19:27:37 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 19:27:37 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 19:27:37 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 19:27:37 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 20:50:16 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 20:50:16 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 20:50:16 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 20:50:16 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 20:50:16 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 21:20:03 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 21:20:03 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 21:20:03 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 21:20:03 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 21:20:03 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 22:20:06 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 22:20:06 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 22:20:06 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 22:20:06 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 22:20:06 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-08 23:54:52 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-08 23:54:52 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-08 23:54:52 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-08 23:54:52 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-08 23:54:52 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 00:26:59 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 00:26:59 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 00:26:59 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 00:26:59 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 00:26:59 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 01:04:04 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 01:04:04 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 01:04:04 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 01:04:04 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 01:04:04 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 01:28:09 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 01:28:09 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 01:28:09 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 01:28:09 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 01:28:09 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 02:32:55 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 02:32:55 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 02:32:55 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 02:32:55 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 02:32:55 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 03:01:11 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 03:01:11 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 03:01:11 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 03:01:11 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 03:01:11 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 03:35:35 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 03:35:35 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 03:35:35 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 03:35:35 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 03:35:35 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 04:41:51 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 04:41:51 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 04:41:51 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 04:41:51 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 04:41:51 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 05:29:37 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 05:29:37 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 05:29:37 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 05:29:37 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 05:29:37 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 05:53:29 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 05:53:29 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 05:53:29 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 05:53:29 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 05:53:29 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 08:29:44 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 08:29:44 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 08:29:44 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 08:29:44 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 08:29:44 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 08:53:27 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 08:53:27 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 08:53:27 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 08:53:27 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 08:53:27 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 09:21:18 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 09:21:18 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 09:21:18 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 09:21:18 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 09:21:18 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 10:40:56 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 10:40:56 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 10:40:56 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 10:40:56 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 10:40:56 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 11:15:45 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 11:15:45 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 11:15:45 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 11:15:45 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 11:15:45 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 12:17:55 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 12:17:55 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 12:17:55 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 12:17:55 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 12:17:55 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 12:56:35 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 12:56:35 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 12:56:35 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 12:56:35 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 12:56:35 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 13:24:09 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 13:24:09 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 13:24:09 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 13:24:09 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 13:24:09 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 15:02:17 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 15:02:17 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 15:02:17 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 15:02:17 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 15:02:17 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 15:30:08 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 15:30:08 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 15:30:08 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 15:30:08 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 15:30:08 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 16:35:03 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 16:35:03 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 16:35:03 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 16:35:03 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 16:35:03 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 17:05:58 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 17:05:58 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 17:05:58 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 17:05:58 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 17:05:58 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 17:30:18 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 17:30:18 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 17:30:18 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 17:30:18 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 17:30:18 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 17:53:22 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 17:53:22 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 17:53:22 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 17:53:22 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 17:53:22 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 18:31:29 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 18:31:29 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 18:31:29 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 18:31:29 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 18:31:29 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 18:54:24 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 18:54:24 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 18:54:24 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 18:54:24 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 18:54:24 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 19:27:04 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 19:27:04 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 19:27:04 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 19:27:04 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 19:27:04 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 20:14:20 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 20:14:20 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 20:14:20 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 20:14:20 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 20:14:20 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 21:03:46 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 21:03:46 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 21:03:46 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 21:03:46 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 21:03:46 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 21:40:37 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 21:40:37 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 21:40:37 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 21:40:37 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 21:40:37 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-09 23:32:23 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-09 23:32:23 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-09 23:32:23 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-09 23:32:23 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-09 23:32:23 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 00:28:17 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 00:28:17 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 00:28:17 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 00:28:17 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 00:28:17 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 01:19:21 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 01:19:21 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 01:19:21 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 01:19:21 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 01:19:21 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 03:18:54 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 03:18:54 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 03:18:54 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 03:18:54 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 03:18:54 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 03:33:55 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 03:33:55 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 03:33:55 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 03:33:55 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 03:33:55 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 04:03:07 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 04:03:07 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 04:03:07 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 04:03:07 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 04:03:07 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 05:00:13 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 05:00:13 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 05:00:13 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 05:00:13 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 05:00:13 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 06:21:57 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 06:21:57 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 06:21:57 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 06:21:57 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 06:21:57 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 06:51:57 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 06:51:57 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 06:51:57 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 06:51:57 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 06:51:57 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 07:23:35 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 07:23:35 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 07:23:35 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 07:23:35 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 07:23:35 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 07:30:45 [INFO] iroha.db: Database initialized.
+2026-04-10 07:30:46 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-04-10 07:30:49 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 07:30:49 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 07:30:49 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 07:30:49 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 07:30:49 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 09:33:46 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 09:33:46 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 09:33:46 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 09:33:46 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 09:33:46 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 10:25:28 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 10:25:28 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 10:25:28 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 10:25:28 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 10:25:28 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 10:56:54 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 10:56:54 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 10:56:54 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 10:56:54 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 10:56:54 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 11:21:56 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 11:21:56 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 11:21:56 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 11:21:56 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 11:21:56 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 11:53:52 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 11:53:52 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 11:53:52 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 11:53:52 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 11:53:52 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 13:40:16 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 13:40:16 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 13:40:16 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 13:40:16 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 13:40:16 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 16:03:52 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 16:03:52 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 16:03:52 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 16:03:52 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 16:03:52 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 16:59:38 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 16:59:38 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 16:59:38 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 16:59:38 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 16:59:38 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 17:31:39 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 17:31:39 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 17:31:39 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 17:31:39 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 17:31:39 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 18:20:01 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 18:20:01 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 18:20:01 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 18:20:01 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 18:20:01 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 19:02:28 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 19:02:28 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 19:02:28 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 19:02:28 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 19:02:28 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 19:59:15 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 19:59:15 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 19:59:15 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 19:59:15 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 19:59:15 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 21:04:40 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 21:04:40 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 21:04:40 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 21:04:40 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 21:04:40 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-10 21:42:48 [INFO] iroha.db: Database initialized.
+2026-04-10 21:42:48 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-04-10 21:42:51 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-10 21:42:51 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-10 21:42:51 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-10 21:42:51 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-10 21:42:51 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-11 22:39:41 [INFO] iroha.db: Database initialized.
+2026-04-11 22:39:41 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-04-11 22:39:45 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-11 22:39:45 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-11 22:39:45 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-11 22:39:45 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-11 22:39:45 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-12 23:33:21 [INFO] iroha.db: Database initialized.
+2026-04-12 23:33:21 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-04-12 23:33:25 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-12 23:33:25 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-12 23:33:25 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-12 23:33:25 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-12 23:33:25 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-17 23:16:43 [INFO] iroha.db: Database initialized.
+2026-04-17 23:16:43 [INFO] iroha.audio_engine: ffmpeg found: /usr/bin/ffmpeg
+2026-04-17 23:16:47 [INFO] iroha.music: MusicControlView registered (persistent).
+2026-04-17 23:16:47 [INFO] iroha.sensitive_filter: SensitiveFilterView registered (persistent).
+2026-04-17 23:16:47 [INFO] iroha.audio_effects: EQView registered (persistent).
+2026-04-17 23:16:47 [INFO] iroha.party: PartyView registered (persistent).
+2026-04-17 23:16:47 [INFO] iroha.ai_diagnosis: DiagnosisView registered (persistent).
+2026-04-17 23:27:17 [INFO] iroha.music: [Guild 1363116304764112966] VC接続試行 1/3
+2026-04-17 23:27:17 [INFO] iroha.music: [Guild 1363116304764112966] voice_state(None) 送信済み
+2026-04-17 23:27:17 [INFO] iroha.music: [Guild 1363116304764112966] セッションクリア確認 (0.0秒)
+2026-04-17 23:27:17 [WARNING] iroha.music: [Guild 1363116304764112966] 4017: セッション無効 → リセットして再試行
+2026-04-17 23:27:19 [INFO] iroha.music: [Guild 1363116304764112966] VC接続試行 2/3
+2026-04-17 23:27:19 [INFO] iroha.music: [Guild 1363116304764112966] voice_state(None) 送信済み
+2026-04-17 23:27:19 [INFO] iroha.music: [Guild 1363116304764112966] セッションクリア確認 (0.0秒)
+2026-04-17 23:27:20 [WARNING] iroha.music: [Guild 1363116304764112966] 4017: セッション無効 → リセットして再試行
+2026-04-17 23:27:24 [INFO] iroha.music: [Guild 1363116304764112966] VC接続試行 3/3
+2026-04-17 23:27:24 [INFO] iroha.music: [Guild 1363116304764112966] voice_state(None) 送信済み
+2026-04-17 23:27:24 [INFO] iroha.music: [Guild 1363116304764112966] セッションクリア確認 (0.0秒)
+2026-04-17 23:27:24 [WARNING] iroha.music: [Guild 1363116304764112966] 4017: セッション無効 → リセットして再試行

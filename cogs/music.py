@@ -399,18 +399,98 @@ class Music(commands.Cog):
 
     # ── ボイス接続ヘルパー ───────────────────────────────────────
 
+    async def _reset_voice_session(self, guild: discord.Guild) -> None:
+        """
+        Discord側のボイスセッションを完全リセットする。
+
+        【4017の本当の原因】
+        discord.py の内部リトライは同じ session_id で再接続を試みる。
+        session_id が無効になっている状態では何度試しても4017になる。
+        ws.voice_state(None) で Discord 側のセッション記録を消去し、
+        guild.me.voice が None になるまで待機することで
+        次の connect() が新しい session_id を取得できるようになる。
+        """
+        # 1. discord.py 内部オブジェクトを破棄
+        if guild.voice_client is not None:
+            try:
+                await guild.voice_client.disconnect(force=True)
+            except Exception:
+                pass
+
+        # 2. メインWSに「このギルドのVCから離脱」を送信
+        try:
+            await self.bot.ws.voice_state(guild.id, None)
+            log.info(f"[Guild {guild.id}] voice_state(None) 送信済み")
+        except Exception as e:
+            log.warning(f"[Guild {guild.id}] voice_state(None) 送信失敗: {e}")
+            return
+
+        # 3. VOICE_STATE_UPDATE が届いて guild.me.voice が None になるまで待機
+        #    これが None になって初めて Discord 側のセッションが無効化された状態
+        for i in range(60):  # 最大6秒
+            await asyncio.sleep(0.1)
+            if guild.me is None or guild.me.voice is None:
+                log.info(f"[Guild {guild.id}] セッションクリア確認 ({i*0.1:.1f}秒)")
+                return
+        log.warning(f"[Guild {guild.id}] セッションクリアタイムアウト（強行）")
+
     async def _ensure_voice(self, ctx: commands.Context) -> discord.VoiceClient | None:
         if ctx.author.voice is None:
             await ctx.send("❌ まずボイスチャンネルに参加してください。")
             return None
-        guild_id = ctx.guild.id
+
+        guild     = ctx.guild
+        guild_id  = guild.id
+        target_ch = ctx.author.voice.channel
         vc: discord.VoiceClient | None = ctx.voice_client
-        if vc is None or not vc.is_connected():
-            vc = await ctx.author.voice.channel.connect()
-        elif ctx.author.voice.channel != vc.channel:
-            await vc.move_to(ctx.author.voice.channel)
+
+        if vc is not None and vc.is_connected() and vc.channel == target_ch:
+            # 正常に接続済み → そのまま使う
+            await self.bot.guild_manager.ensure_guild(guild_id)
+            state = self.bot.guild_manager.get(guild_id)
+            state.text_channel_id = ctx.channel.id
+            return vc
+
+        if vc is not None and vc.is_connected() and vc.channel != target_ch:
+            await vc.move_to(target_ch)
+            await self.bot.guild_manager.ensure_guild(guild_id)
+            state = self.bot.guild_manager.get(guild_id)
+            state.text_channel_id = ctx.channel.id
+            return vc
+
+        # ── 未接続 or 切断状態 → リセット＋再接続 ──────────────────────
+        # discord.py 内部の reconnect=True は4017でも同じセッションIDで
+        # 再試行し続けるため、アプリ側でリセットループを制御する。
+        MAX_ATTEMPTS = 3
+        for attempt in range(1, MAX_ATTEMPTS + 1):
+            log.info(f"[Guild {guild_id}] VC接続試行 {attempt}/{MAX_ATTEMPTS}")
+
+            # セッションを完全リセット
+            await self._reset_voice_session(guild)
+
+            try:
+                # reconnect=False: discord.py の内部リトライを無効にして
+                #                  アプリ側でリトライを制御する
+                vc = await target_ch.connect(timeout=15.0, reconnect=False)
+                log.info(f"[Guild {guild_id}] VC接続成功（試行{attempt}回目）")
+                break
+            except discord.errors.ConnectionClosed as e:
+                if e.code == 4017:
+                    log.warning(f"[Guild {guild_id}] 4017: セッション無効 → リセットして再試行")
+                    await asyncio.sleep(2.0 * attempt)  # 指数バックオフ
+                    continue
+                log.error(f"[Guild {guild_id}] VC接続失敗 (code={e.code}): {e}")
+                await ctx.send(f"❌ ボイスチャンネルへの接続に失敗しました。(code={e.code})")
+                return None
+            except Exception as e:
+                log.error(f"[Guild {guild_id}] VC接続失敗: {e}")
+                await ctx.send("❌ ボイスチャンネルへの接続に失敗しました。")
+                return None
+        else:
+            await ctx.send("❌ 接続を3回試みましたが失敗しました。しばらく待ってから再試行してください。")
+            return None
+
         await self.bot.guild_manager.ensure_guild(guild_id)
-        # コマンドを打ったテキストチャンネルを記録（NowPlaying送信先）
         state = self.bot.guild_manager.get(guild_id)
         state.text_channel_id = ctx.channel.id
         return vc
@@ -457,13 +537,21 @@ class Music(commands.Cog):
         if state.shuffle:
             random.shuffle(state.queue)
 
+        # vc が None（接続前に切断等）の場合はキューを保持したまま終了
+        if vc is None or not vc.is_connected():
+            log.warning(f"[Guild {guild_id}] _advance: VoiceClient が None のためスキップ")
+            return
+
         next_track     = state.queue.pop(0)
         state.current  = next_track
         await self._play_track(guild_id, vc, next_track)
 
     async def _play_track(
-        self, guild_id: int, vc: discord.VoiceClient, track: dict
+        self, guild_id: int, vc: discord.VoiceClient | None, track: dict
     ) -> None:
+        if vc is None or not vc.is_connected():
+            log.error(f"[Guild {guild_id}] _play_track: VoiceClient が None または未接続")
+            return
         state     = self.bot.guild_manager.get(guild_id)
         audio_cfg = await self.bot.guild_manager.get_audio_settings(guild_id)
         eq_bands  = json.loads(audio_cfg.get("eq_bands", "{}"))
@@ -472,8 +560,23 @@ class Music(commands.Cog):
         webpage_url = track.get("webpage_url", "")
         stream_url  = await YTDLSource.get_stream_url(webpage_url)
         if not stream_url:
-            log.error(f"[Guild {guild_id}] ストリームURL取得失敗: {webpage_url}")
-            self._after_track(guild_id, None)
+            log.error(f"[Guild {guild_id}] ストリームURL取得失敗（メン限・削除済み等）: {webpage_url}")
+            # テキストチャンネルに通知してから次の曲へ
+            ch_id = state.text_channel_id
+            if ch_id:
+                try:
+                    await _post_v2(
+                        self.bot, ch_id,
+                        _simple_components(
+                            f"⚠️ **{track['title']}** は再生できませんでした。"
+                            "（メンバー限定・削除済み・地域制限等）次の曲へスキップします。",
+                            0xFEE75C,
+                        ),
+                    )
+                except Exception:
+                    pass
+            # 次の曲へ
+            asyncio.create_task(self._advance(guild_id))
             return
 
         # FFmpegエラーをキャッチして分かりやすく通知
