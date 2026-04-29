@@ -135,7 +135,7 @@ class Statistics(commands.Cog):
     async def on_ready(self) -> None:
         self.bot.add_view(StatsView(self))
 
-    @commands.command(name="stats", aliases=["ranking"])
+    @commands.hybrid_command(name="stats", aliases=["ranking"])
     async def stats(self, ctx: commands.Context) -> None:
         """サーバーの音楽統計を表示"""
         guild_id = ctx.guild.id
@@ -170,7 +170,7 @@ class Statistics(commands.Cog):
             json={"flags": 1 << 15, "components": comps},
         )
 
-    @commands.command(name="mystats")
+    @commands.hybrid_command(name="mystats")
     async def mystats(self, ctx: commands.Context) -> None:
         """自分の再生履歴を表示"""
         guild_id = ctx.guild.id

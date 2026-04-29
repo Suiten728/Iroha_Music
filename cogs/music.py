@@ -409,52 +409,143 @@ class Music(commands.Cog):
         """
         Discord側のボイスセッションを完全リセットする。
 
-        【4017エラーの根本原因と対策】
-        discord.py の VoiceClient は内部に session_id を保持している。
-        Botが再起動すると WebSocket セッションが新しくなるため
-        古い session_id はDiscordサーバー側で無効(Unknown)になる。
-        この状態でそのまま connect() しようとすると
-        Discordは 4017 (Unknown Session) を返し続ける。
+        ════════════════════════════════════════════════════════
+        【4017エラー（Unknown Session）の根本原因 — 詳細分析】
+        ════════════════════════════════════════════════════════
 
-        対策:
-        1. discord.py 内部の VoiceClient を force=True で破棄する
-        2. メインWSに voice_state(None) を送りDiscord側のセッション記録を消去する
-        3. VOICE_STATE_UPDATE イベントが届いて guild.me.voice が None になるまで
-           待機する（これが None になって初めてDiscord側でセッションが消えた状態）
-        4. その後 connect() することで新しい session_id が正常に発行される
+        Discord のボイス接続フローは以下の通り:
+          1. メインWS へ opcode 4 (voice_state) を送信 → チャンネルID指定
+          2. Discord から VOICE_STATE_UPDATE が届く → session_id が更新される
+          3. Discord から VOICE_SERVER_UPDATE が届く → token, endpoint が取得される
+          4. ボイスWS に接続し IDENTIFY (opcode 0) を送信
+             → IDENTIFY の payload に session_id を含む
+          5. Discord が session_id を検証 → 有効なら接続成立
+
+        ４０１７エラーが発生する条件:
+          Bot が再起動すると メインWS の "gateway session" が新しくなる。
+          しかし Discord サーバー側には古い voice_session_id が残る。
+          この状態で接続すると IDENTIFY に含まれる session_id が
+          Discord 側の記録と一致せず 4017 (Unknown Session) が返される。
+
+        ════════════════════════════════════════════════════════
+        【旧実装の問題点（なぜ3回全て失敗したか）】
+        ════════════════════════════════════════════════════════
+
+        旧コード:
+          1. VoiceClient.disconnect(force=True)
+             → 内部で _voice_disconnect() = change_voice_state(channel=None) を実行
+             → さらに wait=True で VOICE_STATE_UPDATE(channel=None) の受信を待機
+             ✅ ここまでは正しい（Discord側のセッションが消去される）
+
+          2. bot.ws.voice_state(guild.id, None) を追加送信  ← 問題！
+             → 既に Step 1 で同じ処理が完了しているのに再度送信
+             → Discord側で「また切断要求が来た」と認識され状態が不定に
+             → 次の connect() 時の VOICE_STATE_UPDATE/VOICE_SERVER_UPDATE が
+               この二重送信に対応するものになり、タイミングがずれる
+
+          3. guild.me.voice == None を手動ポーリング
+             → Step 1 の disconnect(wait=True) で既に保証されているため冗長
+             → 二重送信の影響で None にならないケースも発生
+
+        結果: 二重送信 → Discord側の状態不定 → 新しい session_id が発行されず
+              → 4017 が繰り返される
+
+        ════════════════════════════════════════════════════════
+        【新実装の修正方針】
+        ════════════════════════════════════════════════════════
+
+        CASE A: guild.voice_client が存在する場合（通常ケース）
+          → VoiceClient.disconnect(force=True) のみ呼ぶ
+          → これにより内部で正しく change_voice_state(None) + 確認待機が行われる
+          → 追加の voice_state 送信は行わない（二重送信を防止）
+
+        CASE B: guild.voice_client が None だが guild.me.voice が残っている場合
+          （Bot が強制終了した等で内部オブジェクトが消えたケース）
+          → bot.ws.voice_state(None) を1回だけ送信
+          → VOICE_STATE_UPDATE(channel=None) を待機
+
+        いずれの場合も、Discord 側のセッション消去確認後に
+        2秒の追加待機を入れて反映を確実にする。
         """
-        # Step 1: discord.py 内部オブジェクトを破棄
+        guild_id = guild.id
         vc = guild.voice_client
+
         if vc is not None:
+            # ── CASE A: VoiceClient が存在する ──────────────────────────
+            # VoiceClient.disconnect(force=True) は内部で:
+            #   1. _voice_disconnect() → change_voice_state(channel=None) 送信
+            #   2. _connection.disconnect(wait=True) → VOICE_STATE_UPDATE 受信まで待機
+            #   3. cleanup() → 内部キャッシュから VoiceClient を削除
+            # これにより Discord 側のセッション消去が保証される。
+            # ※ 追加で voice_state(None) を送ると二重送信になるため送らない。
+            log.info(f"[Guild {guild_id}] VoiceClient.disconnect(force=True) 開始")
             try:
                 await vc.disconnect(force=True)
+                log.info(f"[Guild {guild_id}] VoiceClient.disconnect 完了 → セッションクリア済み")
             except Exception as e:
-                log.debug(f"[Guild {guild.id}] VoiceClient.disconnect(force=True): {e}")
+                log.warning(f"[Guild {guild_id}] VoiceClient.disconnect 例外: {e}")
+                # disconnect に失敗した場合はフォールスルーして CASE B の処理を試みる
+                await self._force_clear_voice_state(guild)
+        else:
+            # ── CASE B: VoiceClient なしで guild.me.voice が残っている ──
+            await self._force_clear_voice_state(guild)
 
-        # Step 2: メインWSに「このギルドのVCから離脱」を送信
-        try:
-            await self.bot.ws.voice_state(guild.id, None)
-            log.info(f"[Guild {guild.id}] voice_state(None) 送信完了")
-        except Exception as e:
-            log.warning(f"[Guild {guild.id}] voice_state(None) 送信失敗: {e}")
+        # Discord 側の状態反映を確実にするための追加待機
+        # disconnect(wait=True) で VOICE_STATE_UPDATE は受け取っているが、
+        # Discord サーバー側でのセッション記録削除が全ノードに
+        # 伝播するまで若干の時間がかかる場合がある。
+        await asyncio.sleep(2.0)
+        log.info(f"[Guild {guild_id}] セッションリセット完了（追加待機2秒）")
+
+    async def _force_clear_voice_state(self, guild: discord.Guild) -> None:
+        """
+        VoiceClient が存在しない状態で Discord 側のボイスセッションを強制クリアする。
+        bot.ws.voice_state(None) を1回だけ送信し、VOICE_STATE_UPDATE を待機する。
+        """
+        guild_id = guild.id
+
+        # guild.me.voice が既に None なら何もしなくてよい
+        if guild.me is None or guild.me.voice is None:
+            log.debug(f"[Guild {guild_id}] guild.me.voice は既に None → スキップ")
             return
 
-        # Step 3: VOICE_STATE_UPDATE が届くまで待機（最大5秒）
-        # guild.me.voice が None になるまで待つことでサーバー側のセッション消去を確認
+        log.info(f"[Guild {guild_id}] voice_state(None) 送信（VoiceClient なし）")
+        try:
+            await self.bot.ws.voice_state(guild_id, None)
+        except Exception as e:
+            log.warning(f"[Guild {guild_id}] voice_state(None) 送信失敗: {e}")
+            return
+
+        # VOICE_STATE_UPDATE(channel=None) の受信を最大 5 秒待機
         for i in range(50):
             await asyncio.sleep(0.1)
             if guild.me is None or guild.me.voice is None:
-                log.info(f"[Guild {guild.id}] セッションクリア確認 ({(i+1)*0.1:.1f}秒)")
+                log.info(f"[Guild {guild_id}] セッションクリア確認 ({(i + 1) * 0.1:.1f}秒)")
                 return
-        log.warning(f"[Guild {guild.id}] セッションクリア待機タイムアウト（5秒）→ 強行続行")
+        log.warning(f"[Guild {guild_id}] セッションクリア確認タイムアウト（5秒）→ 強行続行")
 
     async def _ensure_voice(self, ctx: commands.Context) -> discord.VoiceClient | None:
         """
         ユーザーのVCに接続し VoiceClient を返す。
-        4017エラー対策として独自リトライループを実装。
 
-        reconnect=False にして discord.py 内部の無限リトライを停止し、
-        アプリ側でセッションリセット → 再接続を制御する。
+        ════════════════════════════════════════════════════════
+        【接続フローと4017対策】
+        ════════════════════════════════════════════════════════
+
+        1. 既に正常接続済みの場合はそのまま返す
+        2. 別チャンネルにいる場合は move_to() で移動
+        3. 未接続 / 切断状態の場合:
+           a. _reset_voice_session() でセッションを完全クリア
+           b. channel.connect(reconnect=True) で接続
+              ※ reconnect=True を使用する理由:
+                discord.py の _inner_connect は connect 試行を最大5回行い、
+                各回で新たに VOICE_STATE_UPDATE を取得して session_id を更新する。
+                reconnect=False にすると4017受信後すぐに例外が上がり、
+                アプリ側のループでリセットを繰り返すことになるが、
+                リセット直後に discord.py 内部の状態（VoiceConnectionState）が
+                まだ古い state を保持している場合がある。
+                reconnect=True にすることで discord.py 内部が適切に
+                session_id の再取得を含むフルハンドシェイクを行う。
         """
         if ctx.author.voice is None:
             await ctx.send("❌ まずボイスチャンネルに参加してください。")
@@ -484,55 +575,67 @@ class Music(commands.Cog):
                     log.warning(f"[Guild {guild_id}] move_to失敗: {e}")
                     # 移動失敗時はいったん切断してから再接続へ
 
-        # ── 未接続 or 切断状態 → リセット＆再接続ループ ────────────
-        # discord.py の reconnect=True は 4017 でも同じ無効な session_id で
-        # リトライし続けるため、アプリ側でリセットを挟んでリトライする。
+        # ── 未接続 or 切断状態 → セッションリセット & 再接続 ──────
         MAX_ATTEMPTS = 3
         last_error: Exception | None = None
 
         for attempt in range(1, MAX_ATTEMPTS + 1):
             log.info(f"[Guild {guild_id}] VC接続試行 {attempt}/{MAX_ATTEMPTS}")
 
-            # セッションを完全リセット（古い session_id を消去）
+            # ─────────────────────────────────────────────────────
+            # セッションを完全リセット
+            # （二重 voice_state 送信なし・disconnect(wait=True) で確実なクリア）
+            # ─────────────────────────────────────────────────────
             await self._reset_voice_session(guild)
 
-            # リセット後に少し待機して Discord 側の反映を確実にする
-            await asyncio.sleep(0.5)
-
             try:
-                # reconnect=False: discord.py 内部リトライを無効にして
-                #                  アプリ側でリトライを制御する
-                vc = await target_ch.connect(timeout=20.0, reconnect=False)
+                # reconnect=True: discord.py 内部の堅牢なリトライ機構を利用
+                #   → _inner_connect が最大5回試行し、各回で VOICE_STATE_UPDATE を
+                #     受け取り直して session_id を更新する
+                #   → 4017 が来ても内部でフルハンドシェイクをやり直す
+                vc = await target_ch.connect(timeout=20.0, reconnect=True)
                 log.info(f"[Guild {guild_id}] VC接続成功（{attempt}回目）")
                 break
 
             except discord.errors.ConnectionClosed as e:
                 last_error = e
-                if e.code == 4017:
+                code = e.code
+                if code in (4017, 4006):
+                    # 4017: Unknown Session  / 4006: Session No Longer Valid
+                    # reconnect=True でも最大5回リトライ後に失敗した場合にここに来る
                     log.warning(
-                        f"[Guild {guild_id}] 4017 (Unknown Session): "
-                        f"セッション無効 → リセット後に再試行 ({attempt}/{MAX_ATTEMPTS})"
+                        f"[Guild {guild_id}] {code} エラー（セッション無効）: "
+                        f"アプリ側リトライ {attempt}/{MAX_ATTEMPTS} — "
+                        f"次回リセット前に {attempt * 3}秒待機"
                     )
-                    # 指数バックオフ: 2秒, 4秒, 6秒
-                    await asyncio.sleep(2.0 * attempt)
-                    continue
-                elif e.code == 4006:
-                    log.warning(
-                        f"[Guild {guild_id}] 4006 (Session No Longer Valid): "
-                        f"セッション期限切れ → リセット後に再試行 ({attempt}/{MAX_ATTEMPTS})"
-                    )
-                    await asyncio.sleep(2.0 * attempt)
+                    # 指数バックオフ: 3秒, 6秒, 9秒
+                    await asyncio.sleep(3.0 * attempt)
                     continue
                 else:
-                    log.error(f"[Guild {guild_id}] VC接続失敗 code={e.code}: {e}")
-                    await ctx.send(f"❌ ボイスチャンネルへの接続に失敗しました。(code={e.code})")
+                    log.error(f"[Guild {guild_id}] VC接続失敗 code={code}: {e}")
+                    await ctx.send(f"❌ ボイスチャンネルへの接続に失敗しました。(code={code})")
                     return None
 
             except asyncio.TimeoutError:
                 last_error = asyncio.TimeoutError()
                 log.warning(f"[Guild {guild_id}] VC接続タイムアウト ({attempt}回目)")
-                await asyncio.sleep(2.0 * attempt)
+                await asyncio.sleep(3.0 * attempt)
                 continue
+
+            except discord.ClientException as e:
+                # "Already connected to a voice channel." の場合
+                # 前回の disconnect が完全に反映されていない可能性がある
+                if "already connected" in str(e).lower():
+                    log.warning(
+                        f"[Guild {guild_id}] ClientException (Already connected): "
+                        f"前回のdisconnectが未反映の可能性 → 追加待機後リトライ"
+                    )
+                    last_error = e
+                    await asyncio.sleep(3.0 * attempt)
+                    continue
+                log.error(f"[Guild {guild_id}] ClientException: {e}")
+                await ctx.send("❌ ボイスチャンネルへの接続に失敗しました。")
+                return None
 
             except Exception as e:
                 last_error = e

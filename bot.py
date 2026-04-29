@@ -75,38 +75,75 @@ class IrohaBot(commands.Bot):
         print(f"✅ ログイン完了: {self.user}")
         Config.check_dependencies()
 
-        # --- 起動時: 全ギルドの古いボイスセッションをクリア (4017対策) ---
+        # ════════════════════════════════════════════════════════
+        # 起動時: 全ギルドの古いボイスセッションをクリア (4017対策)
+        # ════════════════════════════════════════════════════════
         #
-        # 【4017エラーの根本原因】
-        # Discord の WebSocket セッションには "voice session_id" が紐付く。
-        # Botを再起動すると WebSocket セッション自体が新しくなるため
-        # 古い session_id はサーバー側で無効になる。
-        # この状態で connect() を呼ぶと内部的に同じ無効な session_id で
-        # 再接続しようとするため 4017 (Unknown Session) が返り続ける。
+        # 【4017エラー（Unknown Session）の根本原因】
         #
-        # 【対策】
-        # voice_state(guild_id, None) でサーバー側のボイスセッション記録を消去し、
-        # VOICE_STATE_UPDATE が届いて guild.me.voice が None になるまで待機する。
-        # これにより次の connect() が新しい session_id を確実に取得できる。
+        # Discord のボイス接続は以下のフローで行われる:
+        #   1. メインWS → opcode 4 (voice_state) 送信
+        #   2. Discord → VOICE_STATE_UPDATE で session_id を返却
+        #   3. Discord → VOICE_SERVER_UPDATE で token/endpoint を返却
+        #   4. ボイスWS 接続 → IDENTIFY (opcode 0) 送信
+        #      ※ IDENTIFY の payload に session_id を含む
+        #   5. Discord が session_id を検証 → 有効なら接続成立
+        #
+        # Bot が再起動するとメインWS の "gateway session" が新しくなる。
+        # しかし Bot が以前ボイスチャンネルに居た場合、Discord サーバー側には
+        # 古い voice_session_id が残り続ける。
+        # この状態で接続すると古い session_id が IDENTIFY に使われ
+        # 4017 (Unknown Session) が返されてしまう。
+        #
+        # 【対策: VoiceClient.disconnect を使わず voice_state(None) だけ送る理由】
+        #
+        # 起動時は VoiceClient オブジェクト自体が存在しない
+        # （Bot 再起動で discord.py の内部状態がリセットされているため）。
+        # VoiceClient.disconnect() は VoiceClient が存在する前提の API のため
+        # 起動時には使えない。
+        # したがって直接 bot.ws.voice_state(guild_id, None) を送り、
+        # VOICE_STATE_UPDATE(channel=None) の受信を待つ方式を採用する。
+        #
+        # ※ VoiceClient が存在する場合（切断なしの再接続等）は
+        #   Music Cog の _reset_voice_session() で disconnect() を使用する。
+        # ════════════════════════════════════════════════════════
         cleared = 0
         for guild in self.guilds:
             try:
                 if guild.me and guild.me.voice:
-                    log.info(f"[起動時] 古いVCセッションをクリア: {guild.name}")
+                    log.info(f"[起動時] 古いVCセッションをクリア: {guild.name} (id={guild.id})")
+
+                    # 1回だけ voice_state(None) を送信
+                    # ※ 複数回送ると Discord 側の状態が不定になるため厳密に1回
                     await self.ws.voice_state(guild.id, None)
-                    # VOICE_STATE_UPDATE の到着を最大3秒待機
-                    for _ in range(30):
+
+                    # VOICE_STATE_UPDATE(channel=None) の受信を待機（最大5秒）
+                    # guild.me.voice が None になれば Discord 側のセッション消去を確認できる
+                    cleared_flag = False
+                    for _ in range(50):
                         await asyncio.sleep(0.1)
                         if guild.me is None or guild.me.voice is None:
+                            cleared_flag = True
                             break
+
+                    if cleared_flag:
+                        log.info(f"[起動時] セッションクリア確認: {guild.name}")
+                    else:
+                        log.warning(
+                            f"[起動時] セッションクリア確認タイムアウト: {guild.name} "
+                            f"→ 強行続行（guild.me.voice={guild.me.voice!r}）"
+                        )
                     cleared += 1
+
             except Exception as e:
-                log.warning(f"Voice state clear failed ({guild.name}): {e}")
+                log.warning(f"[起動時] Voice state clear 失敗 ({guild.name}): {e}")
 
         if cleared:
             print(f"🔄 古いボイスセッションをクリア: {cleared}ギルド")
-            # Discord側のセッション記録削除が全ギルドで完全に反映されるのを待つ
-            await asyncio.sleep(1.5)
+            # Discord 側のセッション記録削除が全ノードに伝播するのを待つ
+            # この待機がないと次の connect() 呼び出しで 4017 が発生することがある
+            await asyncio.sleep(2.0)
+            log.info("[起動時] セッションクリア後の追加待機（2秒）完了")
 
         await self.change_presence(
             activity=discord.Activity(

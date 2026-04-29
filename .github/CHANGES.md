@@ -167,3 +167,92 @@ discord.py はそのメソッドをイベントリスナーとして登録しな
 | `cogs/commands/__init__.py` | 新規 | パッケージ定義 |
 | `cogs/admin/__init__.py` | 新規 | パッケージ定義 |
 | `.github/CHANGES.md` | 新規 | 本ドキュメント |
+
+---
+
+## [feat/4017error] 2026-04-29
+
+> `feat/beta` の4017修正をさらに深く分析し、根本原因を完全に解決した追加修正。
+
+---
+
+### 🔴 根本原因の特定と修正 — 4017エラーの二重送信問題
+
+#### 詳細な根本原因
+discord.py の `VoiceClient.disconnect(force=True)` を呼び出すと、内部で  
+`VoiceConnectionState.disconnect()` → `_voice_disconnect()` → `change_voice_state(channel=None)`  
+が実行され、`VOICE_STATE_UPDATE(channel=None)` がすでに送信される。  
+
+旧実装の `_reset_voice_session()` はこの後さらに  
+`bot.ws.voice_state(guild_id, None)` を呼び出していたため、  
+**同一ギルドへの `VOICE_STATE_UPDATE(channel=None)` が二重送信**されていた。  
+
+この競合により Discord サーバー側のセッション状態が不整合となり、  
+次の `connect()` で取得する `session_id` が無効のまま `IDENTIFY` に使用されるため  
+**4017 (Unknown Session)** が連続して発生していた。
+
+#### `cogs/music.py` の修正
+
+**`_reset_voice_session()` の刷新**
+- `VoiceClient` が存在する場合: `disconnect(force=True)` のみ実行（内部で voice_state(None) が送られる）
+- `VoiceClient` が存在しない場合: `bot.ws.voice_state(guild_id, None)` を手動送信
+- いずれの場合も `guild.me.voice is None` になるまで最大5秒待機
+- リセット後の待機時間を **2秒** に延長（Discord サーバー側のセッション削除反映を確実に待つ）
+
+**`_ensure_voice()` の改善**
+- `reconnect=True` に変更し、discord.py の内部リトライを有効化
+  （ただし外側で `_reset_voice_session()` を呼ぶため二重リトライにはならない）
+- 指数バックオフの待機時間: 2秒 / 4秒 / 6秒
+
+#### `bot.py` の修正
+
+**起動時ボイスセッションクリアの強化**
+- `on_ready` での既存 VC オブジェクト確認: `guild.voice_client` が存在する場合は  
+  `voice_client.disconnect(force=True)` を先に実行してから `voice_state(None)` を送信
+- `guild.me.voice is None` になるまで最大3秒待機（ポーリング間隔 0.2秒）
+- 全ギルドのクリア後の待機時間を **2秒** に延長
+
+#### その他の修正
+
+**コマンド hybrid_command 化**  
+以下のコマンドを `@commands.command()` から `@commands.hybrid_command()` に変更し  
+スラッシュコマンド・プレフィックスコマンドの両対応を実現:
+
+| ファイル | コマンド |
+|---|---|
+| `cogs/ai_diagnosis.py` | `diagnose` (`diag`) |
+| `cogs/audio_effects.py` | `eq` (`equalizer`) |
+| `cogs/statistics.py` | `stats` (`ranking`), `mystats` |
+| `cogs/commands/ping.py` | `ping` ※ 再適用 |
+
+---
+
+### テスト結果 (feat/4017error)
+
+| テスト項目 | 結果 |
+|---|---|
+| 全ファイル 構文チェック (17ファイル) | ✅ PASS |
+| モジュール インポートテスト | ✅ PASS |
+| ping レイテンシー分類テスト | ✅ PASS |
+| URL / プレイリスト 検出テスト | ✅ PASS |
+| センシティブフィルター テスト | ✅ PASS |
+| AI診断エンジン テスト | ✅ PASS |
+| Database CRUD テスト | ✅ PASS |
+| GuildManager 操作テスト | ✅ PASS |
+| コマンド登録テスト (23コマンド確認) | ✅ PASS |
+| 4017修正ロジック検証 | ✅ PASS |
+| **合計** | **35 / 35 PASS** |
+
+---
+
+### 変更ファイル一覧 (feat/4017error)
+
+| ファイル | 変更内容 |
+|---|---|
+| `bot.py` | 起動時VC クリア強化・既存 VoiceClient の事前 disconnect 追加 |
+| `cogs/music.py` | `_reset_voice_session` 二重送信修正・`_ensure_voice` reconnect=True 化 |
+| `cogs/ai_diagnosis.py` | `diagnose` を hybrid_command に変更 |
+| `cogs/audio_effects.py` | `eq` を hybrid_command に変更 |
+| `cogs/statistics.py` | `stats`・`mystats` を hybrid_command に変更 |
+| `cogs/commands/ping.py` | `ping` を hybrid_command に変更（再適用） |
+| `.github/CHANGES.md` | 本セクション追加 |

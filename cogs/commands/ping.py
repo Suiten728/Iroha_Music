@@ -11,16 +11,15 @@ def get_latency_status(latency_ms: int):
         return "少し遅い", discord.Color.orange(), "※処理負荷が高いかもしれません。"
     else:
         return "遅い", discord.Color.red(), "⚠️ レイテンシーが高いです。再起動を検討してください。"
-    
-intents = discord.Intents.default()
-intents.message_content = True
+
 
 class Ping(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="ping", description="Botの応答速度を測定します")
+    @commands.hybrid_command(name="ping", description="Botの応答速度を測定します")
     async def ping(self, ctx: commands.Context):
+        """Botの応答速度を測定する"""
         latency_ms = round(self.bot.latency * 1000)
         status, color, advice = get_latency_status(latency_ms)
         embed = discord.Embed(
@@ -32,6 +31,7 @@ class Ping(commands.Cog):
             await ctx.interaction.response.send_message(embed=embed)
         else:
             await ctx.send(embed=embed)
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Ping(bot))
