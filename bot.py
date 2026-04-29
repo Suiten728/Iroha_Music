@@ -8,7 +8,7 @@ import logging
 from core.guild_manager import GuildManager
 from core.logger import setup_logger
 from core.config_loader import Config
-from data.models import Database
+from data_public.models import Database
 
 # .envからトークン読み込み
 load_dotenv()

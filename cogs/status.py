@@ -20,7 +20,7 @@ class Status(commands.Cog):
 
         # ステータスを順番に定義
         dynamic_presences = [
-            {"type": "Playing", "name": "ver 1.1.0 beta", "state": "Powered by Suiten"},
+            {"type": "Playing", "name": "ver 1.1.0 beta", "state": "Powered by KGP Dev Group"},
             {"type": "Playing", "name": f"ping: {ping}ms", "state": f"{len(self.bot.users)} users"},
         ]
 
