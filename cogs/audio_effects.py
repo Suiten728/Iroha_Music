@@ -141,7 +141,7 @@ class AudioEffects(commands.Cog):
         self.bot.add_view(EQView(self))
         log.info("EQView registered (persistent).")
 
-    @commands.command(name="eq", aliases=["equalizer"])
+    @commands.hybrid_command(name="eq", aliases=["equalizer"])
     async def eq_panel(self, ctx: commands.Context) -> None:
         """イコライザーパネルを表示する"""
         audio_cfg = await self.bot.guild_manager.get_audio_settings(ctx.guild.id)

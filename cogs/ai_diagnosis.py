@@ -176,7 +176,7 @@ class AIDiagnosis(commands.Cog):
         self.bot.add_view(DiagnosisView(self))
         log.info("DiagnosisView registered (persistent).")
 
-    @commands.command(name="diagnose", aliases=["diag"])
+    @commands.hybrid_command(name="diagnose", aliases=["diag"])
     async def diagnose(self, ctx: commands.Context) -> None:
         """AI音楽診断を開始する（3問）"""
         guild_id = ctx.guild.id
