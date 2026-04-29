@@ -1,6 +1,8 @@
 .env
+ci/.env
 venv
 venv/*
+# dataを公開したい場合は./data_public/に挿入
 data/
 data/*
 logs

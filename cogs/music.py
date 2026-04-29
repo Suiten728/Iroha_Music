@@ -252,7 +252,6 @@ class MusicControlView(discord.ui.View):
             vc = guild.voice_client
             if vc.is_playing():
                 vc.pause()
-            # is_playing でない場合でも defer 済みなので失敗しない
 
     @discord.ui.button(custom_id="music:resume", label="▶ 再開", style=discord.ButtonStyle.primary)
     async def resume_btn(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
@@ -291,25 +290,23 @@ class MusicControlView(discord.ui.View):
 
     @discord.ui.button(custom_id="music:shuffle", label="🔀 シャッフル", style=discord.ButtonStyle.success)
     async def shuffle_btn(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+        await interaction.response.defer()
         if interaction.guild is None:
-            await interaction.response.defer()
             return
         state = self._cog.bot.guild_manager.get(interaction.guild.id)
         random.shuffle(state.queue)
         comps = _queue_components(state.queue, 0)
         await _edit_v2(self._cog.bot, interaction.channel_id, interaction.message.id, comps)
-        await interaction.response.defer()
 
     @discord.ui.button(custom_id="music:queue_clear", label="🗑 全クリア", style=discord.ButtonStyle.danger)
     async def clear_btn(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+        await interaction.response.defer()
         if interaction.guild is None:
-            await interaction.response.defer()
             return
         state = self._cog.bot.guild_manager.get(interaction.guild.id)
         state.queue.clear()
         comps = _queue_components([], 0)
         await _edit_v2(self._cog.bot, interaction.channel_id, interaction.message.id, comps)
-        await interaction.response.defer()
 
     # ── 検索 セレクト ────────────────────────────────────────────
 
@@ -357,30 +354,11 @@ class MusicControlView(discord.ui.View):
         if not interaction.response.is_done():
             await interaction.response.defer()
 
-    # ── 動的 custom_id（queue_page）を on_interaction で処理 ────
-
-    @commands.Cog.listener()
-    async def on_interaction(self, interaction: discord.Interaction) -> None:
-        """queue:page:{n} のような動的 custom_id をここで処理する"""
-        if interaction.type != discord.InteractionType.component:
-            return
-        custom_id: str = interaction.data.get("custom_id", "")
-        if not custom_id.startswith("music:queue_page:"):
-            return
-        try:
-            page = int(custom_id.split(":")[-1])
-        except ValueError:
-            await interaction.response.defer()
-            return
-
-        if interaction.guild is None:
-            await interaction.response.defer()
-            return
-
-        state = self._cog.bot.guild_manager.get(interaction.guild.id)
-        comps = _queue_components(state.queue, page)
-        await _edit_v2(self._cog.bot, interaction.channel_id, interaction.message.id, comps)
-        await interaction.response.defer()
+    # ── 動的 custom_id（queue_page）は Music Cog の on_interaction で処理 ────
+    # NOTE: discord.ui.View は commands.Cog.listener() デコレータを解釈しない。
+    #       @commands.Cog.listener() は commands.Cog サブクラスのメソッドに
+    #       のみ有効であるため、View 内に置いても一切呼び出されない（サイレント失敗）。
+    #       そのため on_interaction は Music Cog 側に定義する。
 
 
 # ════════════════════════════════════════════════════════════════
@@ -397,44 +375,87 @@ class Music(commands.Cog):
         self.bot.add_view(MusicControlView(self))
         log.info("MusicControlView registered (persistent).")
 
+    # ── 動的 custom_id（queue_page）をここで処理 ────────────────────────
+    # MusicControlView は discord.ui.View を継承しており Cog.listener を持てない。
+    # queue_page:{n} のような動的な custom_id は Persistent View の
+    # @discord.ui.button では登録できないため、Cog 側の on_interaction で処理する。
+
+    @commands.Cog.listener()
+    async def on_interaction(self, interaction: discord.Interaction) -> None:
+        """music:queue_page:{n} のような動的 custom_id をここで処理する"""
+        if interaction.type != discord.InteractionType.component:
+            return
+        custom_id: str = interaction.data.get("custom_id", "")
+        if not custom_id.startswith("music:queue_page:"):
+            return
+        try:
+            page = int(custom_id.split(":")[-1])
+        except ValueError:
+            await interaction.response.defer()
+            return
+
+        if interaction.guild is None:
+            await interaction.response.defer()
+            return
+
+        state = self.bot.guild_manager.get(interaction.guild.id)
+        comps = _queue_components(state.queue, page)
+        await _edit_v2(self.bot, interaction.channel_id, interaction.message.id, comps)
+        await interaction.response.defer()
+
     # ── ボイス接続ヘルパー ───────────────────────────────────────
 
     async def _reset_voice_session(self, guild: discord.Guild) -> None:
         """
         Discord側のボイスセッションを完全リセットする。
 
-        【4017の本当の原因】
-        discord.py の内部リトライは同じ session_id で再接続を試みる。
-        session_id が無効になっている状態では何度試しても4017になる。
-        ws.voice_state(None) で Discord 側のセッション記録を消去し、
-        guild.me.voice が None になるまで待機することで
-        次の connect() が新しい session_id を取得できるようになる。
-        """
-        # 1. discord.py 内部オブジェクトを破棄
-        if guild.voice_client is not None:
-            try:
-                await guild.voice_client.disconnect(force=True)
-            except Exception:
-                pass
+        【4017エラーの根本原因と対策】
+        discord.py の VoiceClient は内部に session_id を保持している。
+        Botが再起動すると WebSocket セッションが新しくなるため
+        古い session_id はDiscordサーバー側で無効(Unknown)になる。
+        この状態でそのまま connect() しようとすると
+        Discordは 4017 (Unknown Session) を返し続ける。
 
-        # 2. メインWSに「このギルドのVCから離脱」を送信
+        対策:
+        1. discord.py 内部の VoiceClient を force=True で破棄する
+        2. メインWSに voice_state(None) を送りDiscord側のセッション記録を消去する
+        3. VOICE_STATE_UPDATE イベントが届いて guild.me.voice が None になるまで
+           待機する（これが None になって初めてDiscord側でセッションが消えた状態）
+        4. その後 connect() することで新しい session_id が正常に発行される
+        """
+        # Step 1: discord.py 内部オブジェクトを破棄
+        vc = guild.voice_client
+        if vc is not None:
+            try:
+                await vc.disconnect(force=True)
+            except Exception as e:
+                log.debug(f"[Guild {guild.id}] VoiceClient.disconnect(force=True): {e}")
+
+        # Step 2: メインWSに「このギルドのVCから離脱」を送信
         try:
             await self.bot.ws.voice_state(guild.id, None)
-            log.info(f"[Guild {guild.id}] voice_state(None) 送信済み")
+            log.info(f"[Guild {guild.id}] voice_state(None) 送信完了")
         except Exception as e:
             log.warning(f"[Guild {guild.id}] voice_state(None) 送信失敗: {e}")
             return
 
-        # 3. VOICE_STATE_UPDATE が届いて guild.me.voice が None になるまで待機
-        #    これが None になって初めて Discord 側のセッションが無効化された状態
-        for i in range(60):  # 最大6秒
+        # Step 3: VOICE_STATE_UPDATE が届くまで待機（最大5秒）
+        # guild.me.voice が None になるまで待つことでサーバー側のセッション消去を確認
+        for i in range(50):
             await asyncio.sleep(0.1)
             if guild.me is None or guild.me.voice is None:
-                log.info(f"[Guild {guild.id}] セッションクリア確認 ({i*0.1:.1f}秒)")
+                log.info(f"[Guild {guild.id}] セッションクリア確認 ({(i+1)*0.1:.1f}秒)")
                 return
-        log.warning(f"[Guild {guild.id}] セッションクリアタイムアウト（強行）")
+        log.warning(f"[Guild {guild.id}] セッションクリア待機タイムアウト（5秒）→ 強行続行")
 
     async def _ensure_voice(self, ctx: commands.Context) -> discord.VoiceClient | None:
+        """
+        ユーザーのVCに接続し VoiceClient を返す。
+        4017エラー対策として独自リトライループを実装。
+
+        reconnect=False にして discord.py 内部の無限リトライを停止し、
+        アプリ側でセッションリセット → 再接続を制御する。
+        """
         if ctx.author.voice is None:
             await ctx.send("❌ まずボイスチャンネルに参加してください。")
             return None
@@ -444,50 +465,88 @@ class Music(commands.Cog):
         target_ch = ctx.author.voice.channel
         vc: discord.VoiceClient | None = ctx.voice_client
 
-        if vc is not None and vc.is_connected() and vc.channel == target_ch:
-            # 正常に接続済み → そのまま使う
-            await self.bot.guild_manager.ensure_guild(guild_id)
-            state = self.bot.guild_manager.get(guild_id)
-            state.text_channel_id = ctx.channel.id
-            return vc
+        # ── すでに正常接続済み ──────────────────────────────────
+        if vc is not None and vc.is_connected():
+            if vc.channel == target_ch:
+                await self.bot.guild_manager.ensure_guild(guild_id)
+                state = self.bot.guild_manager.get(guild_id)
+                state.text_channel_id = ctx.channel.id
+                return vc
+            else:
+                # 別チャンネルへ移動
+                try:
+                    await vc.move_to(target_ch)
+                    await self.bot.guild_manager.ensure_guild(guild_id)
+                    state = self.bot.guild_manager.get(guild_id)
+                    state.text_channel_id = ctx.channel.id
+                    return vc
+                except Exception as e:
+                    log.warning(f"[Guild {guild_id}] move_to失敗: {e}")
+                    # 移動失敗時はいったん切断してから再接続へ
 
-        if vc is not None and vc.is_connected() and vc.channel != target_ch:
-            await vc.move_to(target_ch)
-            await self.bot.guild_manager.ensure_guild(guild_id)
-            state = self.bot.guild_manager.get(guild_id)
-            state.text_channel_id = ctx.channel.id
-            return vc
-
-        # ── 未接続 or 切断状態 → リセット＋再接続 ──────────────────────
-        # discord.py 内部の reconnect=True は4017でも同じセッションIDで
-        # 再試行し続けるため、アプリ側でリセットループを制御する。
+        # ── 未接続 or 切断状態 → リセット＆再接続ループ ────────────
+        # discord.py の reconnect=True は 4017 でも同じ無効な session_id で
+        # リトライし続けるため、アプリ側でリセットを挟んでリトライする。
         MAX_ATTEMPTS = 3
+        last_error: Exception | None = None
+
         for attempt in range(1, MAX_ATTEMPTS + 1):
             log.info(f"[Guild {guild_id}] VC接続試行 {attempt}/{MAX_ATTEMPTS}")
 
-            # セッションを完全リセット
+            # セッションを完全リセット（古い session_id を消去）
             await self._reset_voice_session(guild)
 
+            # リセット後に少し待機して Discord 側の反映を確実にする
+            await asyncio.sleep(0.5)
+
             try:
-                # reconnect=False: discord.py の内部リトライを無効にして
+                # reconnect=False: discord.py 内部リトライを無効にして
                 #                  アプリ側でリトライを制御する
-                vc = await target_ch.connect(timeout=15.0, reconnect=False)
-                log.info(f"[Guild {guild_id}] VC接続成功（試行{attempt}回目）")
+                vc = await target_ch.connect(timeout=20.0, reconnect=False)
+                log.info(f"[Guild {guild_id}] VC接続成功（{attempt}回目）")
                 break
+
             except discord.errors.ConnectionClosed as e:
+                last_error = e
                 if e.code == 4017:
-                    log.warning(f"[Guild {guild_id}] 4017: セッション無効 → リセットして再試行")
-                    await asyncio.sleep(2.0 * attempt)  # 指数バックオフ
+                    log.warning(
+                        f"[Guild {guild_id}] 4017 (Unknown Session): "
+                        f"セッション無効 → リセット後に再試行 ({attempt}/{MAX_ATTEMPTS})"
+                    )
+                    # 指数バックオフ: 2秒, 4秒, 6秒
+                    await asyncio.sleep(2.0 * attempt)
                     continue
-                log.error(f"[Guild {guild_id}] VC接続失敗 (code={e.code}): {e}")
-                await ctx.send(f"❌ ボイスチャンネルへの接続に失敗しました。(code={e.code})")
-                return None
+                elif e.code == 4006:
+                    log.warning(
+                        f"[Guild {guild_id}] 4006 (Session No Longer Valid): "
+                        f"セッション期限切れ → リセット後に再試行 ({attempt}/{MAX_ATTEMPTS})"
+                    )
+                    await asyncio.sleep(2.0 * attempt)
+                    continue
+                else:
+                    log.error(f"[Guild {guild_id}] VC接続失敗 code={e.code}: {e}")
+                    await ctx.send(f"❌ ボイスチャンネルへの接続に失敗しました。(code={e.code})")
+                    return None
+
+            except asyncio.TimeoutError:
+                last_error = asyncio.TimeoutError()
+                log.warning(f"[Guild {guild_id}] VC接続タイムアウト ({attempt}回目)")
+                await asyncio.sleep(2.0 * attempt)
+                continue
+
             except Exception as e:
-                log.error(f"[Guild {guild_id}] VC接続失敗: {e}")
+                last_error = e
+                log.error(f"[Guild {guild_id}] VC接続失敗: {type(e).__name__}: {e}")
                 await ctx.send("❌ ボイスチャンネルへの接続に失敗しました。")
                 return None
+
         else:
-            await ctx.send("❌ 接続を3回試みましたが失敗しました。しばらく待ってから再試行してください。")
+            # MAX_ATTEMPTS 回全て失敗
+            log.error(f"[Guild {guild_id}] VC接続 {MAX_ATTEMPTS}回全て失敗: {last_error}")
+            await ctx.send(
+                f"❌ ボイスチャンネルへの接続を {MAX_ATTEMPTS} 回試みましたが失敗しました。\n"
+                "しばらく待ってから再度お試しください。"
+            )
             return None
 
         await self.bot.guild_manager.ensure_guild(guild_id)
@@ -525,7 +584,7 @@ class Music(commands.Cog):
 
         # ループ処理
         if state.loop_mode == "one" and state.current:
-            pass  # キューに再追加しない（同じ曲を再生）
+            pass  # キューに再追加しない（同じ曲を再再生）
         elif state.loop_mode == "all" and state.current:
             state.queue.append(state.current)
 
@@ -561,7 +620,6 @@ class Music(commands.Cog):
         stream_url  = await YTDLSource.get_stream_url(webpage_url)
         if not stream_url:
             log.error(f"[Guild {guild_id}] ストリームURL取得失敗（メン限・削除済み等）: {webpage_url}")
-            # テキストチャンネルに通知してから次の曲へ
             ch_id = state.text_channel_id
             if ch_id:
                 try:
@@ -575,11 +633,9 @@ class Music(commands.Cog):
                     )
                 except Exception:
                     pass
-            # 次の曲へ
             asyncio.create_task(self._advance(guild_id))
             return
 
-        # FFmpegエラーをキャッチして分かりやすく通知
         try:
             source = make_ffmpeg_source(
                 stream_url,
@@ -614,7 +670,6 @@ class Music(commands.Cog):
     async def _send_now_playing(
         self, guild_id: int, state, track: dict, vc: discord.VoiceClient
     ) -> None:
-        """NowPlaying UI を送信する"""
         settings = await self.bot.guild_manager.get_settings(guild_id)
         ch_id    = settings.get("music_channel_id") or state.text_channel_id
         if not ch_id:
@@ -692,7 +747,6 @@ class Music(commands.Cog):
                 return
 
             if YTDLSource._is_url(query):
-                # URL → 直接キューに追加して再生
                 track = results[0]
                 await self._add_to_queue(ctx.guild.id, [track], ctx.author.id)
                 if not vc.is_playing():
@@ -703,7 +757,6 @@ class Music(commands.Cog):
                         _simple_components(f"✅ **{track['title']}** をキューに追加しました。", 0x57F287),
                     )
             else:
-                # キーワード → 検索結果選択UI
                 self._search_cache[ctx.guild.id] = results
                 await _post_v2(
                     self.bot, ctx.channel.id,
@@ -734,7 +787,8 @@ class Music(commands.Cog):
                 return
             await self._add_to_queue(ctx.guild.id, tracks, ctx.author.id)
             await ctx.send(f"✅ **{len(tracks)}曲** をキューに追加しました。")
-            if not ctx.voice_client.is_playing():
+            vc_now = ctx.voice_client
+            if vc_now and not vc_now.is_playing():
                 await self._advance(ctx.guild.id)
         except Exception as e:
             import traceback
@@ -749,7 +803,7 @@ class Music(commands.Cog):
         comps = _queue_components(state.queue, 0)
         await _post_v2(self.bot, ctx.channel.id, comps)
 
-    @commands.hybrid_command(name="nowplaying", aliases=["np"])
+    @commands.hybrid_command(name="nowplaying", aliases=["np", "now"])
     async def nowplaying(self, ctx: commands.Context) -> None:
         """現在再生中の曲を表示する"""
         await _ack(ctx)

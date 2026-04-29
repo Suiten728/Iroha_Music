@@ -11,6 +11,7 @@ from core.config_loader import Config
 from data.models import Database
 
 # .envからトークン読み込み
+load_dotenv()
 load_dotenv(dotenv_path="ci/.env")
 TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 if TOKEN is None:
@@ -28,7 +29,7 @@ intents.voice_states = True
 intents.members = True
 
 
-class MyBot(commands.Bot):
+class IrohaBot(commands.Bot):
     def __init__(self):
         super().__init__(
             command_prefix="IM!",
@@ -49,7 +50,7 @@ class MyBot(commands.Bot):
         # --- Cogをまとめてロード ---
         for folder in ("./cogs",):
             for root, _, files in os.walk(folder):
-                for filename in files:
+                for filename in sorted(files):  # 順序を安定させる
                     if filename.endswith(".py") and filename != "__init__.py":
                         rel_path = os.path.relpath(os.path.join(root, filename), ".")
                         cog_name = rel_path.replace(os.sep, ".")[:-3]
@@ -60,23 +61,53 @@ class MyBot(commands.Bot):
 
         # --- ロード結果表示 ---
         if failed_cogs:
-            print(f"✅ 以下のFile以外ロードに成功しました - {self.user}")
+            print(f"⚠️ 以下のCogのロードに失敗しました:")
             for cog_name, error in failed_cogs:
-                print(
-                    f"❌ ロード失敗 : {cog_name} - {self.user}\n"
-                    f"{error}\n"
-                )
+                print(f"  ❌ {cog_name}: {error}")
         else:
-            print(f"✅ すべてのFileのロードに成功しました - {self.user}")
+            print(f"✅ すべてのCogのロードに成功しました")
 
-        # --- スラッシュコマンド同期 ---
-        # グローバルsync（反映まで最大1時間）
+        # --- スラッシュコマンド同期（グローバル）---
         global_synced = await self.tree.sync()
-        print(f"✅ グローバルスラッシュコマンド登録数: {len(global_synced)} - {self.user}")
+        print(f"✅ グローバルスラッシュコマンド登録数: {len(global_synced)}")
 
     async def on_ready(self):
         print(f"✅ ログイン完了: {self.user}")
         Config.check_dependencies()
+
+        # --- 起動時: 全ギルドの古いボイスセッションをクリア (4017対策) ---
+        #
+        # 【4017エラーの根本原因】
+        # Discord の WebSocket セッションには "voice session_id" が紐付く。
+        # Botを再起動すると WebSocket セッション自体が新しくなるため
+        # 古い session_id はサーバー側で無効になる。
+        # この状態で connect() を呼ぶと内部的に同じ無効な session_id で
+        # 再接続しようとするため 4017 (Unknown Session) が返り続ける。
+        #
+        # 【対策】
+        # voice_state(guild_id, None) でサーバー側のボイスセッション記録を消去し、
+        # VOICE_STATE_UPDATE が届いて guild.me.voice が None になるまで待機する。
+        # これにより次の connect() が新しい session_id を確実に取得できる。
+        cleared = 0
+        for guild in self.guilds:
+            try:
+                if guild.me and guild.me.voice:
+                    log.info(f"[起動時] 古いVCセッションをクリア: {guild.name}")
+                    await self.ws.voice_state(guild.id, None)
+                    # VOICE_STATE_UPDATE の到着を最大3秒待機
+                    for _ in range(30):
+                        await asyncio.sleep(0.1)
+                        if guild.me is None or guild.me.voice is None:
+                            break
+                    cleared += 1
+            except Exception as e:
+                log.warning(f"Voice state clear failed ({guild.name}): {e}")
+
+        if cleared:
+            print(f"🔄 古いボイスセッションをクリア: {cleared}ギルド")
+            # Discord側のセッション記録削除が全ギルドで完全に反映されるのを待つ
+            await asyncio.sleep(1.5)
+
         await self.change_presence(
             activity=discord.Activity(
                 type=discord.ActivityType.listening,
@@ -84,24 +115,7 @@ class MyBot(commands.Bot):
             )
         )
 
-        # --- 起動時: 全ギルドの古いボイスセッションをクリア (4017対策) ---
-        # Bot再起動後にDiscordサーバー側に前回のボイスセッションが残ることがある。
-        # voice_state(None)後、guild.me.voice が None になるまで待機してから進む。
-        for guild in self.guilds:
-            try:
-                if guild.me and guild.me.voice:
-                    log.info(f"古いVCセッションをクリア: {guild.name}")
-                    await self.ws.voice_state(guild.id, None)
-                    # Discord 側の確認を最大5秒待機
-                    for _ in range(50):
-                        await asyncio.sleep(0.1)
-                        if guild.me is None or guild.me.voice is None:
-                            break
-            except Exception as e:
-                log.warning(f"Voice state clear failed ({guild.name}): {e}")
-
-        # --- 全参加ギルドへ即時sync（開発中は必須）---
-        # グローバルsyncは最大1時間かかるため、ギルドごとにコピーして即時反映する
+        # --- 全参加ギルドへ即時sync ---
         synced_guilds = 0
         for guild in self.guilds:
             try:
@@ -111,11 +125,10 @@ class MyBot(commands.Bot):
                 synced_guilds += 1
             except Exception as e:
                 log.warning(f"Guild sync failed ({guild.name}): {e}")
-        print(f"✅ ギルド別スラッシュコマンド即時sync完了: {synced_guilds}サーバー - {self.user}")
+        print(f"✅ ギルド別スラッシュコマンド即時sync完了: {synced_guilds}サーバー")
 
     async def on_guild_join(self, guild: discord.Guild):
         await self.guild_manager.ensure_guild(guild.id)
-        # 新規参加ギルドにも即時sync
         try:
             self.tree.copy_global_to(guild=guild)
             await self.tree.sync(guild=guild)
@@ -123,16 +136,29 @@ class MyBot(commands.Bot):
             log.warning(f"Guild sync failed on join ({guild.name}): {e}")
         print(f"✅ サーバー参加: {guild.name} ({guild.id})")
 
+    async def close(self):
+        """Bot終了時にDBを閉じる"""
+        if self.db:
+            await self.db.close()
+        await super().close()
+
     async def on_command_error(self, ctx: commands.Context, error: Exception):
         if isinstance(error, commands.CommandNotFound):
             return
         log.error(f"Command error in {ctx.command}: {error}", exc_info=True)
 
 
+# --- 後方互換エイリアス（TYPE_CHECKING で IrohaBot と参照される） ---
+MyBot = IrohaBot
+
+
 # --- 起動処理 ---
 async def main():
-    bot = MyBot()
-    await bot.start(TOKEN)
+    bot = IrohaBot()
+    try:
+        await bot.start(TOKEN)
+    finally:
+        await bot.close()
 
 
 if __name__ == "__main__":
