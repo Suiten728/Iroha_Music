@@ -144,12 +144,24 @@ class AudioEffects(commands.Cog):
     @commands.hybrid_command(name="eq", aliases=["equalizer"])
     async def eq_panel(self, ctx: commands.Context) -> None:
         """イコライザーパネルを表示する"""
+        # スラッシュ時: defer → Component v2 を HTTP 直送 → thinking 表示を削除
+        if ctx.interaction and not ctx.interaction.response.is_done():
+            await ctx.interaction.response.defer(thinking=True)
+
         audio_cfg = await self.bot.guild_manager.get_audio_settings(ctx.guild.id)
         comps = _eq_panel_components(audio_cfg)
+
         await self.bot.http.request(
             discord.http.Route("POST", "/channels/{channel_id}/messages", channel_id=ctx.channel.id),
             json={"flags": 1 << 15, "components": comps},
         )
+
+        # スラッシュ時: thinking 表示を削除
+        if ctx.interaction:
+            try:
+                await ctx.interaction.delete_original_response()
+            except Exception:
+                pass
 
     async def _save_audio_settings(self, guild_id: int, **kwargs) -> None:
         set_clauses = ", ".join(f"{k} = ?" for k in kwargs)
@@ -161,6 +173,11 @@ class AudioEffects(commands.Cog):
         await self.bot.db.commit()
 
     async def _refresh_panel(self, interaction: discord.Interaction) -> None:
+        """ボタン/セレクト操作後にパネルを更新する"""
+        # まず defer してタイムアウトを防ぐ
+        if not interaction.response.is_done():
+            await interaction.response.defer()
+
         audio_cfg = await self.bot.guild_manager.get_audio_settings(interaction.guild_id)
         comps = _eq_panel_components(audio_cfg)
         await interaction.client.http.request(
@@ -172,7 +189,6 @@ class AudioEffects(commands.Cog):
             ),
             json={"flags": 1 << 15, "components": comps},
         )
-        await interaction.response.defer()
 
     async def _apply_preset(self, interaction: discord.Interaction, preset: str) -> None:
         guild_id = interaction.guild_id
