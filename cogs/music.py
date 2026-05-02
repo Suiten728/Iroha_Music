@@ -47,6 +47,32 @@ async def _post_v2(bot, channel_id: int, components: list[dict]) -> None:
     )
 
 
+async def _ack_post_v2(ctx: commands.Context, bot, components: list[dict]) -> None:
+    """
+    スラッシュ / プレフィックス 両対応の Component v2 送信ヘルパー。
+
+    【スラッシュ時の問題】
+    defer() 後に _post_v2 (HTTP直送・新規メッセージ) を使うと
+    Discord はインタラクションへの「応答」がないと判断し
+    「インタラクション失敗」と表示する。
+
+    【解決策】
+    スラッシュ時: defer(thinking=True) → _post_v2 で送信
+                  → delete_original_response() で thinking 表示を削除
+    プレフィックス時: _post_v2 で送信するだけ
+    """
+    if ctx.interaction:
+        if not ctx.interaction.response.is_done():
+            await ctx.interaction.response.defer(thinking=True)
+        await _post_v2(bot, ctx.channel.id, components)
+        try:
+            await ctx.interaction.delete_original_response()
+        except Exception:
+            pass  # 削除できなくても続行
+    else:
+        await _post_v2(bot, ctx.channel.id, components)
+
+
 async def _edit_v2(bot, channel_id: int, message_id: int, components: list[dict]) -> None:
     """IS_COMPONENTS_V2 フラグ付きでメッセージをHTTP直接編集する"""
     await bot.http.request(
@@ -58,6 +84,31 @@ async def _edit_v2(bot, channel_id: int, message_id: int, components: list[dict]
         ),
         json={"flags": 1 << 15, "components": components},
     )
+
+
+async def _reply(ctx: commands.Context, content: str) -> None:
+    """
+    スラッシュ / プレフィックス 両対応の短文返信ヘルパー。
+    - スラッシュ（defer済み）: followup.send()
+    - スラッシュ（未defer）: interaction.response.send_message()
+    - プレフィックス: ctx.send()
+    """
+    if ctx.interaction:
+        if ctx.interaction.response.is_done():
+            await ctx.interaction.followup.send(content, ephemeral=False)
+        else:
+            await ctx.interaction.response.send_message(content)
+    else:
+        await ctx.send(content)
+
+
+async def _delete_interaction(ctx: commands.Context) -> None:
+    """defer 後の thinking 表示を削除する（スラッシュ時のみ）"""
+    if ctx.interaction and ctx.interaction.response.is_done():
+        try:
+            await ctx.interaction.delete_original_response()
+        except Exception:
+            pass
 
 
 # ════════════════════════════════════════════════════════════════
@@ -548,7 +599,7 @@ class Music(commands.Cog):
                 session_id の再取得を含むフルハンドシェイクを行う。
         """
         if ctx.author.voice is None:
-            await ctx.send("❌ まずボイスチャンネルに参加してください。")
+            await _reply(ctx, "❌ まずボイスチャンネルに参加してください。")
             return None
 
         guild     = ctx.guild
@@ -613,7 +664,7 @@ class Music(commands.Cog):
                     continue
                 else:
                     log.error(f"[Guild {guild_id}] VC接続失敗 code={code}: {e}")
-                    await ctx.send(f"❌ ボイスチャンネルへの接続に失敗しました。(code={code})")
+                    await _reply(ctx, f"❌ ボイスチャンネルへの接続に失敗しました。(code={code})")
                     return None
 
             except asyncio.TimeoutError:
@@ -634,21 +685,22 @@ class Music(commands.Cog):
                     await asyncio.sleep(3.0 * attempt)
                     continue
                 log.error(f"[Guild {guild_id}] ClientException: {e}")
-                await ctx.send("❌ ボイスチャンネルへの接続に失敗しました。")
+                await _reply(ctx, "❌ ボイスチャンネルへの接続に失敗しました。")
                 return None
 
             except Exception as e:
                 last_error = e
                 log.error(f"[Guild {guild_id}] VC接続失敗: {type(e).__name__}: {e}")
-                await ctx.send("❌ ボイスチャンネルへの接続に失敗しました。")
+                await _reply(ctx, "❌ ボイスチャンネルへの接続に失敗しました。")
                 return None
 
         else:
             # MAX_ATTEMPTS 回全て失敗
             log.error(f"[Guild {guild_id}] VC接続 {MAX_ATTEMPTS}回全て失敗: {last_error}")
-            await ctx.send(
+            await _reply(
+                ctx,
                 f"❌ ボイスチャンネルへの接続を {MAX_ATTEMPTS} 回試みましたが失敗しました。\n"
-                "しばらく待ってから再度お試しください。"
+                "しばらく待ってから再度お試しください。",
             )
             return None
 
@@ -836,39 +888,43 @@ class Music(commands.Cog):
     @commands.hybrid_command(name="play", aliases=["p"])
     async def play(self, ctx: commands.Context, *, query: str) -> None:
         """URLまたは検索ワードで音楽を再生する"""
-        await _ack(ctx)
+        # スラッシュ時は即座に defer して「thinking...」表示にする
+        if ctx.interaction and not ctx.interaction.response.is_done():
+            await ctx.interaction.response.defer(thinking=True)
         try:
             vc = await self._ensure_voice(ctx)
             if vc is None:
                 return
 
-            async with ctx.typing():
-                results = await YTDLSource.search(query)
+            results = await YTDLSource.search(query)
 
             if not results:
-                await ctx.send("❌ 検索結果が見つかりませんでした。")
+                await _reply(ctx, "❌ 検索結果が見つかりませんでした。")
                 return
 
             if YTDLSource._is_url(query):
                 track = results[0]
                 await self._add_to_queue(ctx.guild.id, [track], ctx.author.id)
                 if not vc.is_playing():
+                    # _advance が _send_now_playing で Component v2 を送るため
+                    # thinking 表示は削除してから _advance を呼ぶ
+                    await _delete_interaction(ctx)
                     await self._advance(ctx.guild.id)
                 else:
-                    await _post_v2(
-                        self.bot, ctx.channel.id,
+                    await _ack_post_v2(
+                        ctx, self.bot,
                         _simple_components(f"✅ **{track['title']}** をキューに追加しました。", 0x57F287),
                     )
             else:
                 self._search_cache[ctx.guild.id] = results
-                await _post_v2(
-                    self.bot, ctx.channel.id,
+                await _ack_post_v2(
+                    ctx, self.bot,
                     _search_result_components(results[:5], query),
                 )
         except Exception as e:
             import traceback
             traceback.print_exc()
-            await ctx.send(f"```\n{type(e).__name__}: {e}\n```")
+            await _reply(ctx, f"```\n{type(e).__name__}: {e}\n```")
 
     @commands.hybrid_command(name="search", aliases=["s"])
     async def search(self, ctx: commands.Context, *, query: str) -> None:
@@ -878,77 +934,72 @@ class Music(commands.Cog):
     @commands.hybrid_command(name="playlist", aliases=["pl"])
     async def playlist(self, ctx: commands.Context, url: str) -> None:
         """プレイリストURLを丸ごと追加する"""
-        await _ack(ctx)
+        if ctx.interaction and not ctx.interaction.response.is_done():
+            await ctx.interaction.response.defer(thinking=True)
         try:
             vc = await self._ensure_voice(ctx)
             if vc is None:
                 return
-            async with ctx.typing():
-                tracks = await YTDLSource.fetch_playlist(url)
+            tracks = await YTDLSource.fetch_playlist(url)
             if not tracks:
-                await ctx.send("❌ プレイリストを取得できませんでした。")
+                await _reply(ctx, "❌ プレイリストを取得できませんでした。")
                 return
             await self._add_to_queue(ctx.guild.id, tracks, ctx.author.id)
-            await ctx.send(f"✅ **{len(tracks)}曲** をキューに追加しました。")
+            await _reply(ctx, f"✅ **{len(tracks)}曲** をキューに追加しました。")
             vc_now = ctx.voice_client
             if vc_now and not vc_now.is_playing():
                 await self._advance(ctx.guild.id)
         except Exception as e:
             import traceback
             traceback.print_exc()
-            await ctx.send(f"```\n{type(e).__name__}: {e}\n```")
+            await _reply(ctx, f"```\n{type(e).__name__}: {e}\n```")
 
     @commands.hybrid_command(name="queue", aliases=["q"])
     async def queue_cmd(self, ctx: commands.Context) -> None:
-        """キュー一覧を表示する"""
-        await _ack(ctx)
+        """キューの一覧を表示する"""
         state = self.bot.guild_manager.get(ctx.guild.id)
         comps = _queue_components(state.queue, 0)
-        await _post_v2(self.bot, ctx.channel.id, comps)
+        await _ack_post_v2(ctx, self.bot, comps)
 
     @commands.hybrid_command(name="nowplaying", aliases=["np", "now"])
     async def nowplaying(self, ctx: commands.Context) -> None:
         """現在再生中の曲を表示する"""
-        await _ack(ctx)
         state = self.bot.guild_manager.get(ctx.guild.id)
         if not state.current:
-            await ctx.send("❌ 現在再生中の曲はありません。")
+            await _reply(ctx, "❌ 現在再生中の曲はありません。")
             return
         comps = _now_playing_components(
             state.current, int(state.volume * 100), state.loop_mode, len(state.queue)
         )
-        await _post_v2(self.bot, ctx.channel.id, comps)
+        await _ack_post_v2(ctx, self.bot, comps)
 
     @commands.hybrid_command(name="pause")
     async def pause(self, ctx: commands.Context) -> None:
         """再生を一時停止する"""
-        await _ack(ctx)
         vc = ctx.voice_client
         if vc and vc.is_playing():
             vc.pause()
-            await ctx.send("⏸ 一時停止しました。")
+            await _reply(ctx, "⏸ 一時停止しました。")
         else:
-            await ctx.send("❌ 再生中の曲がありません。")
+            await _reply(ctx, "❌ 再生中の曲がありません。")
 
     @commands.hybrid_command(name="resume")
     async def resume(self, ctx: commands.Context) -> None:
         """一時停止を解除する"""
-        await _ack(ctx)
         vc = ctx.voice_client
         if vc and vc.is_paused():
             vc.resume()
-            await ctx.send("▶ 再開しました。")
+            await _reply(ctx, "▶ 再開しました。")
         else:
-            await ctx.send("❌ 一時停止中の曲がありません。")
+            await _reply(ctx, "❌ 一時停止中の曲がありません。")
 
     @commands.hybrid_command(name="skip")
     async def skip(self, ctx: commands.Context) -> None:
         """曲をスキップする（投票スキップ）"""
-        await _ack(ctx)
         state = self.bot.guild_manager.get(ctx.guild.id)
         vc    = ctx.voice_client
         if not vc or not vc.is_playing():
-            await ctx.send("❌ 再生中の曲がありません。")
+            await _reply(ctx, "❌ 再生中の曲がありません。")
             return
         state.skip_votes.add(ctx.author.id)
         members = [m for m in vc.channel.members if not m.bot]
@@ -956,64 +1007,59 @@ class Music(commands.Cog):
         votes   = len(state.skip_votes)
         if votes >= needed:
             vc.stop()
-            await ctx.send(f"⏭ スキップしました。({votes}/{needed} 票)")
+            await _reply(ctx, f"⏭ スキップしました。({votes}/{needed} 票)")
         else:
-            await ctx.send(f"🗳 スキップ投票: {votes}/{needed} 票")
+            await _reply(ctx, f"🗳 スキップ投票: {votes}/{needed} 票")
 
     @commands.hybrid_command(name="stop")
     async def stop(self, ctx: commands.Context) -> None:
         """再生を停止してキューをクリアする"""
-        await _ack(ctx)
         state = self.bot.guild_manager.get(ctx.guild.id)
         state.queue.clear()
         state.current = None
         if ctx.voice_client:
             ctx.voice_client.stop()
-        await ctx.send("⏹ 停止しました。")
+        await _reply(ctx, "⏹ 停止しました。")
 
     @commands.hybrid_command(name="volume", aliases=["vol"])
     async def volume(self, ctx: commands.Context, vol: int) -> None:
         """音量を変更する (1-150)"""
-        await _ack(ctx)
         if not 1 <= vol <= 150:
-            await ctx.send("❌ 音量は 1〜150 で指定してください。")
+            await _reply(ctx, "❌ 音量は 1〜150 で指定してください。")
             return
         state = self.bot.guild_manager.get(ctx.guild.id)
         state.volume = vol / 100
         if ctx.voice_client and ctx.voice_client.source:
             ctx.voice_client.source.volume = state.volume
-        await ctx.send(f"🔊 音量を **{vol}%** に設定しました。")
+        await _reply(ctx, f"🔊 音量を **{vol}%** に設定しました。")
 
     @commands.hybrid_command(name="loop")
     async def loop(self, ctx: commands.Context, mode: str = "one") -> None:
         """ループモード設定 (none / one / all)"""
-        await _ack(ctx)
         mode = mode.lower()
         if mode not in ("none", "one", "all"):
-            await ctx.send("❌ mode は `none` / `one` / `all` で指定してください。")
+            await _reply(ctx, "❌ mode は `none` / `one` / `all` で指定してください。")
             return
         state = self.bot.guild_manager.get(ctx.guild.id)
         state.loop_mode = mode
         labels = {"none": "ループなし", "one": "1曲ループ", "all": "全体ループ"}
-        await ctx.send(f"🔁 ループを **{labels[mode]}** に設定しました。")
+        await _reply(ctx, f"🔁 ループを **{labels[mode]}** に設定しました。")
 
     @commands.hybrid_command(name="shuffle")
     async def shuffle(self, ctx: commands.Context) -> None:
         """シャッフル ON/OFF を切り替える"""
-        await _ack(ctx)
         state = self.bot.guild_manager.get(ctx.guild.id)
         state.shuffle = not state.shuffle
-        await ctx.send(f"🔀 シャッフルを **{'ON' if state.shuffle else 'OFF'}** にしました。")
+        await _reply(ctx, f"🔀 シャッフルを **{'ON' if state.shuffle else 'OFF'}** にしました。")
 
     @commands.hybrid_command(name="leave", aliases=["dc"])
     async def leave(self, ctx: commands.Context) -> None:
         """ボイスチャンネルから切断する"""
-        await _ack(ctx)
         if ctx.voice_client:
             await ctx.voice_client.disconnect()
-            await ctx.send("👋 切断しました。")
+            await _reply(ctx, "👋 切断しました。")
         else:
-            await ctx.send("❌ ボイスチャンネルに接続していません。")
+            await _reply(ctx, "❌ ボイスチャンネルに接続していません。")
 
 
 async def setup(bot: "IrohaBot") -> None:

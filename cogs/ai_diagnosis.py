@@ -64,11 +64,6 @@ def _question_components(session: DiagnosisSession, guild_id: int, user_id: int)
     cat_labels = {"genre": "🎸 ジャンル", "mood": "😊 気分", "energy": "⚡ エネルギー", "lifestyle": "🌿 ライフスタイル"}
     cat = cat_labels.get(q["category"], q["category"])
 
-    options = [
-        discord.SelectOption(label=opt["label"], value=f"{guild_id}:{user_id}:{opt['value']}")
-        for opt in q["options"]
-    ]
-
     return [
         {
             "type": 17,
@@ -168,7 +163,6 @@ class DiagnosisView(discord.ui.View):
 class AIDiagnosis(commands.Cog):
     def __init__(self, bot: "IrohaBot") -> None:
         self.bot = bot
-        # user_id -> DiagnosisResult (last result)
         self._last_results: dict[int, object] = {}
 
     @commands.Cog.listener()
@@ -179,6 +173,11 @@ class AIDiagnosis(commands.Cog):
     @commands.hybrid_command(name="diagnose", aliases=["diag"])
     async def diagnose(self, ctx: commands.Context) -> None:
         """AI音楽診断を開始する（3問）"""
+        # ── スラッシュ時: defer → _post_v2 → delete_original_response ──
+        # defer しないと Discord が「インタラクション失敗」と表示する
+        if ctx.interaction and not ctx.interaction.response.is_done():
+            await ctx.interaction.response.defer(thinking=True)
+
         guild_id = ctx.guild.id
         user_id = ctx.author.id
         questions = pick_questions(3)
@@ -188,12 +187,26 @@ class AIDiagnosis(commands.Cog):
         _sessions[guild_id][user_id] = session
 
         comps = _question_components(session, guild_id, user_id)
+
+        # Component v2 メッセージを HTTP 直送
         await self.bot.http.request(
             discord.http.Route("POST", "/channels/{channel_id}/messages", channel_id=ctx.channel.id),
             json={"flags": 1 << 15, "components": comps},
         )
 
+        # スラッシュ時: thinking 表示（defer の応答）を削除
+        if ctx.interaction:
+            try:
+                await ctx.interaction.delete_original_response()
+            except Exception:
+                pass
+
     async def _start_diagnosis(self, interaction: discord.Interaction) -> None:
+        """ボタンから再診断を開始する"""
+        # まず defer してタイムアウトを防ぐ
+        if not interaction.response.is_done():
+            await interaction.response.defer()
+
         guild_id = interaction.guild_id
         user_id = interaction.user.id
         questions = pick_questions(3)
@@ -212,25 +225,26 @@ class AIDiagnosis(commands.Cog):
             ),
             json={"flags": 1 << 15, "components": comps},
         )
-        await interaction.response.defer()
 
     async def _handle_answer(self, interaction: discord.Interaction, value: str) -> None:
+        # まず defer してタイムアウトを防ぐ
+        if not interaction.response.is_done():
+            await interaction.response.defer()
+
         guild_id = interaction.guild_id
         user_id = interaction.user.id
         guild_sessions = _sessions.get(guild_id, {})
         session = guild_sessions.get(user_id)
         if session is None:
-            await interaction.response.send_message("❌ セッションが見つかりません。`!diagnose` で再開してください。", ephemeral=True)
+            await interaction.followup.send("❌ セッションが見つかりません。`/diagnose` で再開してください。", ephemeral=True)
             return
 
         session.answer(value)
 
         if session.done:
-            # 全問終了 → 結果表示
             result = calculate_result(session.answers)
             self._last_results[user_id] = result
 
-            # DB保存
             try:
                 await self.bot.db.execute(
                     """INSERT OR REPLACE INTO ai_profiles(guild_id, user_id, music_type, energy_score, genre_scores)
@@ -245,7 +259,6 @@ class AIDiagnosis(commands.Cog):
         else:
             comps = _question_components(session, guild_id, user_id)
 
-        # メッセージ更新
         await interaction.client.http.request(
             discord.http.Route(
                 "PATCH",
@@ -255,18 +268,17 @@ class AIDiagnosis(commands.Cog):
             ),
             json={"flags": 1 << 15, "components": comps},
         )
-        await interaction.response.defer()
 
     async def _generate_queue(self, interaction: discord.Interaction) -> None:
+        if not interaction.response.is_done():
+            await interaction.response.defer()
+
         user_id = interaction.user.id
         result = self._last_results.get(user_id)
         if result is None:
-            await interaction.response.send_message("❌ 診断結果が見つかりません。先に診断してください。", ephemeral=True)
+            await interaction.followup.send("❌ 診断結果が見つかりません。先に診断してください。", ephemeral=True)
             return
 
-        await interaction.response.defer()
-
-        # 検索してキューに追加
         music_cog = self.bot.get_cog("Music")
         if music_cog is None:
             return
@@ -288,7 +300,7 @@ class AIDiagnosis(commands.Cog):
                         "content": (
                             f"✅ **{added}曲** をキューに追加しました！\n"
                             f"診断タイプ: **{result.type_label}**\n"
-                            f"ボイスチャンネルに参加して `!play` で開始してください。"
+                            f"ボイスチャンネルに参加して `/play` で開始してください。"
                         ),
                     }
                 ],

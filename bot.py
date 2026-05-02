@@ -34,7 +34,7 @@ class IrohaBot(commands.Bot):
         super().__init__(
             command_prefix="IM!",
             intents=intents,
-            help_command=None
+            help_command=None,
         )
         self.db: Database | None = None
         self.guild_manager: GuildManager | None = None
@@ -61,13 +61,16 @@ class IrohaBot(commands.Bot):
 
         # --- ロード結果表示 ---
         if failed_cogs:
-            print(f"⚠️ 以下のCogのロードに失敗しました:")
+            print("⚠️ 以下のCogのロードに失敗しました:")
             for cog_name, error in failed_cogs:
                 print(f"  ❌ {cog_name}: {error}")
         else:
-            print(f"✅ すべてのCogのロードに成功しました")
+            print("✅ すべてのCogのロードに成功しました")
 
-        # --- スラッシュコマンド同期（グローバル）---
+        # --- スラッシュコマンド同期（グローバルのみ）---
+        # ※ copy_global_to + guild sync は「重複登録」の原因になるため使わない。
+        #   グローバル sync だけで全サーバーに展開される（反映まで最大1時間）。
+        #   即時反映が必要な場合は on_guild_join で guild sync を行う。
         global_synced = await self.tree.sync()
         print(f"✅ グローバルスラッシュコマンド登録数: {len(global_synced)}")
 
@@ -80,32 +83,13 @@ class IrohaBot(commands.Bot):
         # ════════════════════════════════════════════════════════
         #
         # 【4017エラー（Unknown Session）の根本原因】
-        #
-        # Discord のボイス接続は以下のフローで行われる:
-        #   1. メインWS → opcode 4 (voice_state) 送信
-        #   2. Discord → VOICE_STATE_UPDATE で session_id を返却
-        #   3. Discord → VOICE_SERVER_UPDATE で token/endpoint を返却
-        #   4. ボイスWS 接続 → IDENTIFY (opcode 0) 送信
-        #      ※ IDENTIFY の payload に session_id を含む
-        #   5. Discord が session_id を検証 → 有効なら接続成立
-        #
         # Bot が再起動するとメインWS の "gateway session" が新しくなる。
-        # しかし Bot が以前ボイスチャンネルに居た場合、Discord サーバー側には
-        # 古い voice_session_id が残り続ける。
-        # この状態で接続すると古い session_id が IDENTIFY に使われ
-        # 4017 (Unknown Session) が返されてしまう。
+        # しかし古い voice_session_id が Discord サーバー側に残り続けるため、
+        # 次の connect() で IDENTIFY を送ると 4017 (Unknown Session) が返る。
         #
-        # 【対策: VoiceClient.disconnect を使わず voice_state(None) だけ送る理由】
-        #
-        # 起動時は VoiceClient オブジェクト自体が存在しない
-        # （Bot 再起動で discord.py の内部状態がリセットされているため）。
-        # VoiceClient.disconnect() は VoiceClient が存在する前提の API のため
-        # 起動時には使えない。
-        # したがって直接 bot.ws.voice_state(guild_id, None) を送り、
-        # VOICE_STATE_UPDATE(channel=None) の受信を待つ方式を採用する。
-        #
-        # ※ VoiceClient が存在する場合（切断なしの再接続等）は
-        #   Music Cog の _reset_voice_session() で disconnect() を使用する。
+        # 【対策】
+        # 起動時は VoiceClient が存在しないため voice_state(None) を直送し、
+        # VOICE_STATE_UPDATE(channel=None) の受信を待って確認する。
         # ════════════════════════════════════════════════════════
         cleared = 0
         for guild in self.guilds:
@@ -114,11 +98,9 @@ class IrohaBot(commands.Bot):
                     log.info(f"[起動時] 古いVCセッションをクリア: {guild.name} (id={guild.id})")
 
                     # 1回だけ voice_state(None) を送信
-                    # ※ 複数回送ると Discord 側の状態が不定になるため厳密に1回
                     await self.ws.voice_state(guild.id, None)
 
                     # VOICE_STATE_UPDATE(channel=None) の受信を待機（最大5秒）
-                    # guild.me.voice が None になれば Discord 側のセッション消去を確認できる
                     cleared_flag = False
                     for _ in range(50):
                         await asyncio.sleep(0.1)
@@ -140,33 +122,32 @@ class IrohaBot(commands.Bot):
 
         if cleared:
             print(f"🔄 古いボイスセッションをクリア: {cleared}ギルド")
-            # Discord 側のセッション記録削除が全ノードに伝播するのを待つ
-            # この待機がないと次の connect() 呼び出しで 4017 が発生することがある
             await asyncio.sleep(2.0)
             log.info("[起動時] セッションクリア後の追加待機（2秒）完了")
 
         await self.change_presence(
             activity=discord.Activity(
                 type=discord.ActivityType.listening,
-                name="🎵 いろは Music | IM!help",
+                name="🎵 いろは Music | /help",
             )
         )
 
-        # --- 全参加ギルドへ即時sync ---
-        synced_guilds = 0
+        # --- ギルド管理のみ（コマンド同期は setup_hook のグローバル sync で済んでいる）---
+        # ※ ここで tree.sync(guild=guild) を呼ぶと「グローバル + ギルド」の
+        #   2重登録になりスラッシュコマンドが2個表示される。絶対に呼ばない。
         for guild in self.guilds:
             try:
                 await self.guild_manager.ensure_guild(guild.id)
-                self.tree.copy_global_to(guild=guild)
-                await self.tree.sync(guild=guild)
-                synced_guilds += 1
             except Exception as e:
-                log.warning(f"Guild sync failed ({guild.name}): {e}")
-        print(f"✅ ギルド別スラッシュコマンド即時sync完了: {synced_guilds}サーバー")
+                log.warning(f"Guild ensure failed ({guild.name}): {e}")
+
+        print(f"✅ 起動完了 / 参加サーバー数: {len(self.guilds)}")
 
     async def on_guild_join(self, guild: discord.Guild):
+        """新規参加ギルドにはギルド sync で即時反映する（重複にはならない）"""
         await self.guild_manager.ensure_guild(guild.id)
         try:
+            # 新規参加ギルドのみ guild sync → グローバルより先に表示される
             self.tree.copy_global_to(guild=guild)
             await self.tree.sync(guild=guild)
         except Exception as e:
@@ -185,7 +166,7 @@ class IrohaBot(commands.Bot):
         log.error(f"Command error in {ctx.command}: {error}", exc_info=True)
 
 
-# --- 後方互換エイリアス（TYPE_CHECKING で IrohaBot と参照される） ---
+# --- 後方互換エイリアス ---
 MyBot = IrohaBot
 
 

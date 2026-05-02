@@ -232,20 +232,30 @@ class Party(commands.Cog):
     @commands.hybrid_command(name="party")
     async def party(self, ctx: commands.Context) -> None:
         """パーティーモードパネルを表示する"""
-        await _ack(ctx)
+        if ctx.interaction and not ctx.interaction.response.is_done():
+            await ctx.interaction.response.defer(thinking=True)
         guild_id = ctx.guild.id
         state    = self._get_state(guild_id)
         await _post_v2(self.bot, ctx.channel.id, _party_components(guild_id, state))
+        if ctx.interaction:
+            try:
+                await ctx.interaction.delete_original_response()
+            except Exception:
+                pass
 
     @commands.hybrid_command(name="quiz")
     async def quiz(self, ctx: commands.Context) -> None:
         """曲当てクイズを開始する"""
-        await _ack(ctx)
+        if ctx.interaction and not ctx.interaction.response.is_done():
+            await ctx.interaction.response.defer(thinking=True)
         guild_id    = ctx.guild.id
         music_state = self.bot.guild_manager.get(guild_id)
 
         if not music_state.current and not music_state.queue:
-            await ctx.send("❌ キューに曲がありません。先に曲を追加してください。")
+            if ctx.interaction:
+                await ctx.interaction.edit_original_response(content="❌ キューに曲がありません。先に曲を追加してください。")
+            else:
+                await ctx.send("❌ キューに曲がありません。先に曲を追加してください。")
             return
 
         correct_track = music_state.current or music_state.queue[0]
@@ -266,10 +276,17 @@ class Party(commands.Cog):
             self.bot, ctx.channel.id,
             _quiz_components(options, correct_idx, token, guild_id),
         )
+        if ctx.interaction:
+            try:
+                await ctx.interaction.delete_original_response()
+            except Exception:
+                pass
 
     # ── Interaction ハンドラ ──────────────────────────────────────
 
     async def _update_panel(self, interaction: discord.Interaction, guild_id: int) -> None:
+        if not interaction.response.is_done():
+            await interaction.response.defer()
         state = self._get_state(guild_id)
         comps = _party_components(guild_id, state)
         await _edit_v2(self.bot, interaction.channel_id, interaction.message.id, comps)
@@ -310,6 +327,8 @@ class Party(commands.Cog):
         choice: int,
         correct: int,
     ) -> None:
+        if not interaction.response.is_done():
+            await interaction.response.defer()
         is_correct = (choice == correct)
         result_text = (
             f"🎉 **正解！** おめでとうございます！"

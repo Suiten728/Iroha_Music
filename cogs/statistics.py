@@ -23,7 +23,6 @@ def _stats_components(
     time_analysis: list[dict],
     guild_name: str,
 ) -> list[dict]:
-    # 月間ランキング
     rank_lines = []
     medals = ["🥇", "🥈", "🥉"]
     for i, row in enumerate(monthly_top[:10]):
@@ -31,14 +30,12 @@ def _stats_components(
         rank_lines.append(f"{medal} **{row['title'][:40]}** ({row['cnt']}回)")
     rank_text = "\n".join(rank_lines) if rank_lines else "データなし"
 
-    # ユーザーランキング
     user_lines = []
     for i, row in enumerate(user_top[:5]):
         medal = medals[i] if i < 3 else f"`{i+1}.`"
         user_lines.append(f"{medal} <@{row['user_id']}> — {row['cnt']}曲")
     user_text = "\n".join(user_lines) if user_lines else "データなし"
 
-    # 時間帯分析
     time_lines = []
     for row in time_analysis[:5]:
         bar = "█" * min(int(row["cnt"] / max(1, time_analysis[0]["cnt"]) * 10), 10)
@@ -138,6 +135,10 @@ class Statistics(commands.Cog):
     @commands.hybrid_command(name="stats", aliases=["ranking"])
     async def stats(self, ctx: commands.Context) -> None:
         """サーバーの音楽統計を表示"""
+        # スラッシュ時: defer → Component v2 を HTTP 直送 → thinking 表示を削除
+        if ctx.interaction and not ctx.interaction.response.is_done():
+            await ctx.interaction.response.defer(thinking=True)
+
         guild_id = ctx.guild.id
 
         monthly_top = await self.bot.db.fetchall(
@@ -170,9 +171,20 @@ class Statistics(commands.Cog):
             json={"flags": 1 << 15, "components": comps},
         )
 
+        # スラッシュ時: thinking 表示を削除
+        if ctx.interaction:
+            try:
+                await ctx.interaction.delete_original_response()
+            except Exception:
+                pass
+
     @commands.hybrid_command(name="mystats")
     async def mystats(self, ctx: commands.Context) -> None:
         """自分の再生履歴を表示"""
+        # スラッシュ時: defer → Component v2 を HTTP 直送 → thinking 表示を削除
+        if ctx.interaction and not ctx.interaction.response.is_done():
+            await ctx.interaction.response.defer(thinking=True)
+
         guild_id = ctx.guild.id
         user_id = ctx.author.id
         rows = await self.bot.db.fetchall(
@@ -191,7 +203,19 @@ class Statistics(commands.Cog):
             json={"flags": 1 << 15, "components": comps},
         )
 
+        # スラッシュ時: thinking 表示を削除
+        if ctx.interaction:
+            try:
+                await ctx.interaction.delete_original_response()
+            except Exception:
+                pass
+
     async def _refresh_stats(self, interaction: discord.Interaction, period: str) -> None:
+        """期間セレクトでパネルを更新する"""
+        # まず defer してタイムアウトを防ぐ
+        if not interaction.response.is_done():
+            await interaction.response.defer()
+
         guild_id = interaction.guild_id
         date_filter = {
             "month": "AND played_at >= date('now','start of month')",
@@ -233,7 +257,6 @@ class Statistics(commands.Cog):
             ),
             json={"flags": 1 << 15, "components": comps},
         )
-        await interaction.response.defer()
 
 
 async def setup(bot: "IrohaBot") -> None:

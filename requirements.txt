@@ -1,17 +1,23 @@
 # いろは Music System — 依存パッケージ
 # pip install -r requirements.txt
 
-# Discord Bot フレームワーク（Component v2 / LayoutView 対応版）
-discord.py>=2.6.4
+# ─── Discord Bot フレームワーク ───────────────────────────────────────
+# [voice] extras: PyNaCl (音声暗号化) + aiohttp voice backend
+# davey: 2025年3月のセキュリティ変更による DAVE プロトコル (E2EE) 対応
+discord.py[voice]>=2.6.4
+davey>=0.1.0
 
-# 音楽取得
+# ─── 音楽取得 ────────────────────────────────────────────────────────
 yt-dlp>=2024.1.0
 
-# 非同期データベース
+# ─── 非同期データベース ──────────────────────────────────────────────
 aiosqlite>=0.20.0
 
-# 環境変数
+# ─── 環境変数 ────────────────────────────────────────────────────────
 python-dotenv>=1.0.0
 
-# HTTP クライアント（multipart送信用）
+# ─── HTTP クライアント（multipart 送信 / Component v2 直送用）───────
 aiohttp>=3.9.0
+
+# ─── 音声処理（discord.py[voice] が依存: 音声暗号化）───────────────
+PyNaCl>=1.5.0
